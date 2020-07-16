@@ -7,12 +7,15 @@
 #include "AnalizadorLexico/AnalizadorLexico.hpp"
 #include "utiles.hpp"
 
+#define EsVariable(X) X[0] == '<' && X[strlen(X)-1] == '>'
+
 // typedef std::map<std::tuple<std::string, std::string>, std::string> TAS;
 
 // Nodo de un arbol
 struct Nodo {
     std::string contenido;
-    std::vector<std::unique_ptr<struct Nodo>> hijos;
+    // std::vector<std::unique_ptr<struct Nodo>> hijos;
+    std::vector<struct Nodo*> hijos;
     
     // inicializador
     Nodo(const char* cont): contenido(cont){}
@@ -25,7 +28,7 @@ typedef std::vector<const char*> Produccion;
 typedef std::map<std::tuple<const char*, const char*>, Produccion> TAS;
 
 // Pila de Simbolos
-typedef std::stack<const char*> Pila;
+typedef std::stack<std::pair<const char*, Nodo*>> Pila;
 
 int main(){
     // std::make_tuple
@@ -51,16 +54,17 @@ int main(){
     };
 
     const char* SimboloInicial = "<Programa>";
+
+    // std::unique_ptr<Nodo> raiz(new Nodo(SimboloInicial));
+    Nodo* arbol = new Nodo(SimboloInicial);
+    Nodo** raiz = &arbol;
+
     Pila pilaSimbolos;
-    pilaSimbolos.push("$");
-    pilaSimbolos.push(SimboloInicial);
+    pilaSimbolos.push(std::pair<const char*, Nodo*>("$", nullptr));
+    pilaSimbolos.push(std::pair<const char*, Nodo*>(SimboloInicial, *raiz));
 
     bool exito;
     bool error;
-
-    bool esElInicial = true;
-
-    std::unique_ptr<Nodo> raiz(new Nodo(SimboloInicial));
     
     // Declararamos las variables que necesita analizador lexico
     std::ifstream fuente;
@@ -76,30 +80,33 @@ int main(){
     AnalizadorLexico::TablaSimbolos ts;
 
     // bucle principal del analizador sintactico
-    while (exito || error) {
+    while (!exito && !error) {
         ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
-        /* Procedimiento:
 
-         * Voy a la tabla de analisis sintactico (TAS) y me fijo que produccion tengo que aplicar para la variable y token 
-           que tengo.
-        */
-        const char* X = Desapilar(pilaSimbolos);
-        if(!esElInicial){
-          // Bucsar a X en el arbol y obtener el puntero, para luego utilizarlo en raiz->hijos...
-        }
-        
-        // si es variable <...>
-        if(X[0] == '<' && X[strlen(X)-1] == '>'){
+        // Obtener X
+        std::pair<const char*, Nodo*> par = pilaSimbolos.top();
+        const char* X = par.first;
+        raiz = &par.second;
+
+        // Quitar el elemento
+        pilaSimbolos.pop();
+
+        if(EsVariable(X)){
           Produccion produccion = tas[{X, lexema.c_str()}];
           
-          if(!produccion.empty()){      
+          if(!produccion.empty()){
             size_t sz = produccion.size(); 
-            // apilar todos los simbolos (de derecha a izquierda)
+            // apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
             for(int i = sz-1; i >= 0; i--) {
-              pilaSimbolos.push(produccion[i]);
-              raiz->hijos.push_back(std::unique_ptr<Nodo>(new Nodo(produccion[i])));
+              // Crear nodo hijo de X en el arbol
+              Nodo* nodo = new Nodo(produccion[i]);
+              (*raiz)->hijos.push_back(nodo);
+
+              // Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
+              if(!EsVariable(produccion[i])) nodo = nullptr;
+              pilaSimbolos.push(std::pair<const char*, Nodo*>(produccion[i], nodo));
             }
-          }else{
+          } else {
             error = true;
           }
         } else {
@@ -112,27 +119,13 @@ int main(){
             error = true;
           }
         }
-        /* 
-         * Voy al arbol de derivacion y transforma al inicial en la produccion
-         
-         * Apilo la parte derecha de la produccion, con el simbolo que esta mas a la izquierda al tope de la pila. 
-           Entonces en esa pila voy a estar apilando las producciones.
-
-         * Cuando apilo las producciones puede ser que en el tope me quede un terminal, si es asi ese terminal tiene que 
-           ser igual al terminal que esta en la entrada (AL). Entonces si tengo variable (en pila) con terminal (entrada) 
-           voy a la TAS y aplico la produccion que me dice, y si tengo terminal con terminal tienen que ser iguales. 
-           Si no es el mismo hay un error sintactico.
-    
-         * Si voy a la TAS y la celda que obtuve esta vacia, entonces hay un error.
-         
-         */
     }
     
+    // por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
+    LimpiarArbol(arbol);
     return 0;
 }
 
-inline const char* Desapilar(Pila& pila){
-  const char* Y = pila.top(); 
-  pila.pop();
-  return Y;
+void LimpiarArbol(Nodo* raiz){
+  // reccorrer arbol y dar delete
 }
