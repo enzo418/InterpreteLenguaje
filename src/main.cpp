@@ -88,9 +88,9 @@ int main(){
       { {"<T>",               "si"}, {"epsilon"} },
       { {"<T>",               "mientras"}, {"epsilon"} },
       { {"<T>",               ")"}, {"epsilon"} },
-      { {"<IdConst>",         "rcd"}, {"rcd", "(", "<OpAritmeticas>", ")"} }
-      { {"<IdConst>",         "id"}, {"id"} }
-      { {"<IdConst>",         "constante"}, {"constante"} }
+      { {"<IdConst>",         "rcd"}, {"rcd", "(", "<OpAritmeticas>", ")"} },
+      { {"<IdConst>",         "id"}, {"id"} },
+      { {"<IdConst>",         "constante"}, {"constante"} },
       { {"<IdConst>",         "("}, {"(", "<OpAritmeticas>", ")"} }
     };
 

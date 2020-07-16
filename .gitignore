@@ -350,3 +350,5 @@ cmake_install.cmake
 AnalizadorLexico.project
 AnalizadorLexico.workspace
 .codelite/*
+
+out/*
