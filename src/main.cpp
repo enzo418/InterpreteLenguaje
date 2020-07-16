@@ -30,11 +30,16 @@ typedef std::map<std::tuple<const char*, const char*>, Produccion> TAS;
 // Pila de Simbolos
 typedef std::stack<std::pair<const char*, Nodo*>> Pila;
 
+void LimpiarArbol(Nodo* raiz){
+  // reccorrer arbol y dar delete
+}
+
+
 int main(){
     // std::make_tuple
     TAS tas = {
     //    Variable          Token     Produccion
-      { {"<Programa>",        "TOKEN"}, {"<A>", "id", "+", "<Cuerpo>"} },
+      { {"<Programa>",        "var"}, {"var", "<Variables>", "{", "<Cuerpo>", "}"} },
       { {"<Variables>",       "TOKEN"}, {"<P>", "R", "O", "D"} },
       { {"<IdVar>",           "TOKEN"}, {"<P>", "R", "O", "D"} },
       { {"<Cuerpo>",          "TOKEN"}, {"<P>", "R", "O", "D"} },
@@ -124,8 +129,4 @@ int main(){
     // por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
     LimpiarArbol(arbol);
     return 0;
-}
-
-void LimpiarArbol(Nodo* raiz){
-  // reccorrer arbol y dar delete
 }

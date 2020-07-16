@@ -3,7 +3,7 @@
 
 bool AbrirArchivo(std::ifstream& fuente, const char* archivo){
     // Abrimos el archivo con permisos de lectura
-    std::ifstream fuente(archivo);
+    fuente.open(archivo);
 
     if(!fuente.good()){ // si no se pudo abrir
         return false;         
