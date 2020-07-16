@@ -30,10 +30,15 @@ typedef std::map<std::tuple<const char*, const char*>, Produccion> TAS;
 // Pila de Simbolos
 typedef std::stack<std::pair<const char*, Nodo*>> Pila;
 
-void LimpiarArbol(Nodo* raiz){
-  // reccorrer arbol y dar delete
-}
+void LimpiarArbol(Nodo* raiz, Nodo* padre = nullptr){
+	while(raiz->hijos.size() > 0){
+		LimpiarArbol(raiz->hijos[0], raiz);
+	}
 
+	delete raiz;
+
+	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
+}
 
 int main(){
     // std::make_tuple
