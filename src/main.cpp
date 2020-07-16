@@ -40,33 +40,69 @@ int main(){
     TAS tas = {
     //    Variable          Token     Produccion
       { {"<Programa>",        "var"}, {"var", "<Variables>", "{", "<Cuerpo>", "}"} },
-      { {"<Variables>",       "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<IdVar>",           "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Cuerpo>",          "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Sent>",            "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Asignacion>",      "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Funcion>",         "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Mientras>",        "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Condiciones>",     "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<A>",               "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<OpLogico>",        "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Si>",              "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Sino>",            "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<OpAritmeticas>",   "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<T>",               "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<Operador>",        "TOKEN"}, {"<P>", "R", "O", "D"} },
-      { {"<IdConst>",         "TOKEN"}, {"<P>", "R", "O", "D"} }
+      { {"<Variables>",       "id"}, {"id", "<IdVar>"} },
+      { {"<IdVar>",           "{"}, {"epsilon"} },
+      { {"<IdVar>",           ","}, {",", "id", "<IdVar>"} },
+      { {"<IdVar>",           ")"}, {"epsilon"} },
+      { {"<Cuerpo>",          "}"}, {"epsilon"} },
+      { {"<Cuerpo>",          "id"}, {"<Sent>", "<Cuerpo>"} },
+      { {"<Cuerpo>",          "leer"}, {"<Sent>", "<Cuerpo>"} },
+      { {"<Cuerpo>",          "escribir"}, {"<Sent>", "<Cuerpo>"} },
+      { {"<Cuerpo>",          "si"}, {"<Sent>", "<Cuerpo>"} },
+      { {"<Cuerpo>",          "mientras"}, {"<Sent>", "<Cuerpo>"} },
+      { {"<Sent>",            "id"}, {"id", "=", "<OpAritmeticas>"} },
+      { {"<Sent>",            "leer"}, {"leer","(", "cadena", "<OpAritmeticas>",")"} },
+      { {"<Sent>",            "escribir"}, {"escribir", "(", "cadena", "<OpAritmeticas>", ")"} },
+      { {"<Sent>",            "si"}, {"si", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}", "<Sino>"} },
+      { {"<Sent>",            "mientras"}, {"mientras", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}"} },                 
+      { {"<Condiciones>",     "rcd"}, {"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "A"} },
+      { {"<Condiciones>",     "id"}, {"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "A"} },
+      { {"<Condiciones>",     "constante"}, {"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "A"} },
+      { {"<Condiciones>",     "("}, {"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "A"} },
+      { {"<A>",               "and"}, {"and", "<Condiciones>"} },
+      { {"<A>",               "or"}, {"or", "<Condiciones>"} },
+      { {"<A>",               ")"}, {"epsilon"} },     
+      { {"<Sino>",            "}"}, {"epsilon"} },
+      { {"<Sino>",            "id"}, {"epsilon"} },
+      { {"<Sino>",            "leer"}, {"epsilon"} },
+      { {"<Sino>",            "escribir"}, {"epsilon"} },
+      { {"<Sino>",            "sino"}, {"sino", "{", "<Cuerpo>", "}"} },
+      { {"<Sino>",            "si"}, {"epsilon"} },
+      { {"<Sino>",            "mientras"}, {"epsilon"} },
+      { {"<OpAritmeticas>",   "rcd"}, {"<IdCosnt>", "<T>"} },
+      { {"<OpAritmeticas>",   "id"}, {"<IdCosnt>", "<T>"} },
+      { {"<OpAritmeticas>",   "constante"}, {"<IdCosnt>", "<T>"} },
+      { {"<OpAritmeticas>",   "("}, {"<IdCosnt>", "<T>"} },
+      { {"<T>",               "+"}, {"+", "<OpAritmeticas>"} },
+      { {"<T>",               "-"}, {"-", "<OpAritmeticas>"} },
+      { {"<T>",               "/"}, {"/", "<OpAritmeticas>"} },
+      { {"<T>",               "*"}, {"*", "<OpAritmeticas>"} },
+      { {"<T>",               "}"}, {"epsilon"} },
+      { {"<T>",               "^"}, {"^","<OpAritmeticas>"} },
+      { {"<T>",               "and"}, {"epsilon"} },
+      { {"<T>",               "or"}, {"epsilon"} },
+      { {"<T>",               "id"}, {"epsilon"} },
+      { {"<T>",               "opRel"}, {"epsilon"} },
+      { {"<T>",               "leer"}, {"epsilon"} },
+      { {"<T>",               "escribir"}, {"epsilon"} },
+      { {"<T>",               "si"}, {"epsilon"} },
+      { {"<T>",               "mientras"}, {"epsilon"} },
+      { {"<T>",               ")"}, {"epsilon"} },
+      { {"<IdConst>",         "rcd"}, {"rcd", "(", "<OpAritmeticas>", ")"} }
+      { {"<IdConst>",         "id"}, {"id"} }
+      { {"<IdConst>",         "constante"}, {"constante"} }
+      { {"<IdConst>",         "("}, {"(", "<OpAritmeticas>", ")"} }
     };
 
     const char* SimboloInicial = "<Programa>";
 
     // std::unique_ptr<Nodo> raiz(new Nodo(SimboloInicial));
     Nodo* arbol = new Nodo(SimboloInicial);
-    Nodo** raiz = &arbol;
+    Nodo* raiz = arbol;
 
     Pila pilaSimbolos;
     pilaSimbolos.push(std::pair<const char*, Nodo*>("$", nullptr));
-    pilaSimbolos.push(std::pair<const char*, Nodo*>(SimboloInicial, *raiz));
+    pilaSimbolos.push(std::pair<const char*, Nodo*>(SimboloInicial, raiz));
 
     bool exito;
     bool error;
@@ -83,15 +119,15 @@ int main(){
     AnalizadorLexico::ComponenteLexico complex;	
 
     AnalizadorLexico::TablaSimbolos ts;
+    
+    ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
 
     // bucle principal del analizador sintactico
-    while (!exito && !error) {
-        ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
-
+    while (!exito && !error) {      
         // Obtener X
         std::pair<const char*, Nodo*> par = pilaSimbolos.top();
         const char* X = par.first;
-        raiz = &par.second;
+        raiz = par.second;
 
         // Quitar el elemento
         pilaSimbolos.pop();
@@ -105,7 +141,7 @@ int main(){
             for(int i = sz-1; i >= 0; i--) {
               // Crear nodo hijo de X en el arbol
               Nodo* nodo = new Nodo(produccion[i]);
-              (*raiz)->hijos.push_back(nodo);
+              raiz->hijos.push_back(nodo);
 
               // Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
               if(!EsVariable(produccion[i])) nodo = nullptr;
@@ -119,7 +155,7 @@ int main(){
             if(X == "$"){
               exito = true;
             }
-            /// TODO: avanzar el control al siguiente simbolo de entrada.
+            ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
           }else{
             error = true;
           }
