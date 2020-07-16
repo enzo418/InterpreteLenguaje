@@ -156,7 +156,7 @@ int main(){
             error = true;
           }
         } else {
-          if(X == lexema){
+          if(X == lexema || (X == "id" && complex == AnalizadorLexico::Identificador)){
             if(X == "$"){
               exito = true;
             }
