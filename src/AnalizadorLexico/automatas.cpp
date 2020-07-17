@@ -254,6 +254,7 @@ bool EsConstanteEntera(std::ifstream& fuente, ulong& control, std::string& lexem
 
 bool EsOperadorRelacional(std::ifstream& fuente, ulong& control, std::string& lexema) {
 	/// TODO: Hacer automata y ubicarlo aqui
+	return true;
 }
 
 bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexema, ComponenteLexico& complex) {
