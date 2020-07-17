@@ -1,4 +1,6 @@
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
+#include <iostream>
+#include <functional>           // std::ref
 
 int main(){
 	AnalizadorSintactico::TAS tas = {

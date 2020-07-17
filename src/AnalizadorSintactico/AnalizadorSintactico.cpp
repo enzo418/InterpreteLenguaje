@@ -1,4 +1,5 @@
 #include <iostream>
+#include "string.h"
 #include "AnalizadorSintactico.hpp"
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
 #include "../utiles.hpp"
