@@ -5,45 +5,11 @@
 #include <stack>
 #include <memory> 
 #include "AnalizadorLexico/AnalizadorLexico.hpp"
+#include "AnalizadorSintactico/AnalizadorSintactico.hpp"
 #include "utiles.hpp"
 
-constexpr bool EsVariable(const char* X) { return X[0] == '<' && X[strlen(X)-1] == '>'; }
-
-// typedef std::map<std::tuple<std::string, std::string>, std::string> TAS;
-
-// Nodo de un arbol
-struct Nodo {
-	std::string contenido;
-	// std::vector<std::unique_ptr<struct Nodo>> hijos;
-	std::vector<struct Nodo*> hijos;
-	
-	// inicializador
-	Nodo(const char* cont): contenido(cont){}
-};
-
-// Producciones resultantes de un par Variable - Token
-typedef std::vector<const char*> Produccion;
-
-// Tabla de Analisis Sintactico
-typedef std::map<std::pair<std::string, std::string>, Produccion> TAS;
-
-// Pila de Simbolos
-typedef std::stack<std::pair<const char*, Nodo*>> Pila;
-
-void LimpiarArbol(Nodo* raiz, Nodo* padre = nullptr){
-	while(raiz->hijos.size() > 0){
-		LimpiarArbol(raiz->hijos[0], raiz);
-	}
-
-	raiz->hijos.~vector(); // Desasignar memoria del vector
-	delete raiz; // Desasignar memoria del Nodo
-
-	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
-}
-
 int main(){
-	// std::make_tuple
-	TAS tas = {
+	AnalizadorSintactico::TAS tas = {
 	//    Variable          Token     Produccion
 	  { {"<Programa>",        "var"}, {"var", "<Variables>", "{", "<Cuerpo>", "}"} },
 	  { {"<Variables>",       "id"}, {"id", "<IdVar>"} },
@@ -102,80 +68,12 @@ int main(){
 
 	const char* SimboloInicial = "<Programa>";
 
-	// std::unique_ptr<Nodo> raiz(new Nodo(SimboloInicial));
-	Nodo* arbol = new Nodo(SimboloInicial);
-	Nodo* raiz = arbol;
+    AnalizadorSintactico::Nodo* arbol = new AnalizadorSintactico::Nodo(SimboloInicial);
 
-	Pila pilaSimbolos;
-	pilaSimbolos.push(std::pair<const char*, Nodo*>("$", nullptr));
-	pilaSimbolos.push(std::pair<const char*, Nodo*>(SimboloInicial, raiz));
-
-	bool exito = false;
-	bool error = false;
-	
-	// Declararamos las variables que necesita analizador lexico
-	std::ifstream fuente;
-
-	if(!AbrirArchivo(fuente, "input.txt")){
-		if (!AbrirArchivo(fuente, "/input.txt")) {
-			std::cout << "El archivo no existe" << std::endl;
-			delete arbol;
-			return 0;
-		}
-	}
-	
-	ulong control = 0;
-	std::string lexema;
-	AnalizadorLexico::ComponenteLexico complex;	
-
-	AnalizadorLexico::TablaSimbolos ts;
-	
-	if (!ObtenerSiguienteComplex(fuente, control, complex, lexema, ts)) {
-		std::cout << "El archivo esta vacio" << std::endl;
-		return 0;
-	}
-
-	// bucle principal del analizador sintactico
-	while (!exito && !error) {      
-		// Obtener X
-		std::pair<const char*, Nodo*> par = pilaSimbolos.top();
-		const char* X = par.first;
-		raiz = par.second;
-
-		// Quitar el elemento
-		pilaSimbolos.pop();
-
-		if(EsVariable(X)){
-			Produccion produccion = tas[{X, lexema.c_str()}];
-			if(!produccion.empty()){
-				size_t sz = produccion.size(); 
-				// apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
-				for(int i = sz-1; i >= 0; i--) {
-					// Crear nodo hijo de X en el arbol
-					Nodo* nodo = new Nodo(produccion[i]);
-					raiz->hijos.push_back(nodo);
-
-					// Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
-					if(!EsVariable(produccion[i])) 
-						nodo = nullptr;
-					pilaSimbolos.push(std::pair<const char*, Nodo*>(produccion[i], nodo));
-				}
-			} else {
-				error = true;
-			}
-		} else {
-		  if(X == lexema){
-			if(X == "$"){
-			  exito = true;
-			}
-			ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
-		  }else{
-			error = true;
-		  }
-		}
-	}
-	
-	// por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
-	LimpiarArbol(arbol);
-	return 0;
+    int codigo =  AnalizadorSintactico::ObtenerArbolDerivacion(arbol, tas, SimboloInicial);
+    
+    // por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
+    AnalizadorSintactico::LimpiarArbol(arbol);
+    
+    return codigo;
 }
