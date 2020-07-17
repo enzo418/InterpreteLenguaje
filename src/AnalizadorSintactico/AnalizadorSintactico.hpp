@@ -2,7 +2,8 @@
 
 #include "tipos.hpp"
 
-namespace AnalizadorSintactico {
-    void LimpiarArbol(Nodo* raiz, Nodo* padre = nullptr);
-    int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial);    
-}
+void LimpiarArbol(AnalizadorSintactico::Nodo* raiz, 
+					AnalizadorSintactico::Nodo* padre = nullptr);
+
+int ObtenerArbolDerivacion(AnalizadorSintactico::Nodo* arbol, 
+							AnalizadorSintactico::TAS& tas, const char* SimboloInicial);

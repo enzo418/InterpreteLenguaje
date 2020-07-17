@@ -1,12 +1,4 @@
-#include <iostream>
-#include <string.h>
-#include <vector>
-#include <map>
-#include <stack>
-#include <memory> 
-#include "AnalizadorLexico/AnalizadorLexico.hpp"
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
-#include "utiles.hpp"
 
 int main(){
 	AnalizadorSintactico::TAS tas = {
@@ -70,10 +62,10 @@ int main(){
 
     AnalizadorSintactico::Nodo* arbol = new AnalizadorSintactico::Nodo(SimboloInicial);
 
-    int codigo =  AnalizadorSintactico::ObtenerArbolDerivacion(arbol, tas, SimboloInicial);
+    int codigo = ObtenerArbolDerivacion(arbol, std::ref(tas), SimboloInicial);
     
     // por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
-    AnalizadorSintactico::LimpiarArbol(arbol);
+	LimpiarArbol(arbol);
     
-    return codigo;
+    return 0;
 }

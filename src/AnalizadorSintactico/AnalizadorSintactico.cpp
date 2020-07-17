@@ -1,18 +1,15 @@
 #include <iostream>
-#include <string.h>
-#include <vector>
-#include <map>
-#include <stack>
 #include "AnalizadorSintactico.hpp"
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
 #include "../utiles.hpp"
 #include "../tipos.hpp"
+#include "tipos.hpp"
 
 using namespace AnalizadorSintactico;
 
 constexpr bool EsVariable(const char* X) { return X[0] == '<' && X[strlen(X)-1] == '>'; }
 
-void AnalizadorSintactico::LimpiarArbol(Nodo* raiz, Nodo* padre = nullptr){
+void LimpiarArbol(Nodo* raiz, Nodo* padre){
 	while(raiz->hijos.size() > 0){
 		LimpiarArbol(raiz->hijos[0], raiz);
 	}
@@ -23,7 +20,7 @@ void AnalizadorSintactico::LimpiarArbol(Nodo* raiz, Nodo* padre = nullptr){
 	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
 }
 
-int AnalizadorSintactico::ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
+int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 	Nodo* raiz = arbol;
 
 	Pila pilaSimbolos;
