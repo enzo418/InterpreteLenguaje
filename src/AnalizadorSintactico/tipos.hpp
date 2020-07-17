@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <stack>
+#include "../AnalizadorLexico/AnalizadorLexico.hpp"
 
 namespace AnalizadorSintactico{
 	// Nodo de un arbol
@@ -20,7 +21,7 @@ namespace AnalizadorSintactico{
 	typedef std::vector<const char*> Produccion;
 
 	// Tabla de Analisis Sintactico
-	typedef std::map<std::pair<std::string, std::string>, Produccion> TAS;
+	typedef std::map<std::pair<std::string, AnalizadorLexico::ComponenteLexico>, Produccion> TAS;
 
 	// Pila de Simbolos
 	typedef std::stack<std::pair<const char*, Nodo*>> Pila;

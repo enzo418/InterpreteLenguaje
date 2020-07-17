@@ -252,6 +252,10 @@ bool EsConstanteEntera(std::ifstream& fuente, ulong& control, std::string& lexem
 	return esConstEntera;
 }
 
+bool EsOperadorRelacional(std::ifstream& fuente, ulong& control, std::string& lexema) {
+	/// TODO: Hacer automata y ubicarlo aqui
+}
+
 bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexema, ComponenteLexico& complex) {
 	char c = '\0';
 	bool esSimbolo = true;
@@ -264,9 +268,6 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 		case ')':
 			complex = ComponenteLexico::ParentesisC;
 			break;
-		case ';':
-			complex = ComponenteLexico::PuntoComa;
-			break;
 		case '=':
 			complex = ComponenteLexico::Igual;
 			break;
@@ -277,16 +278,10 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 			complex = ComponenteLexico::Menos;
 			break;
 		case '/':
-			complex = ComponenteLexico::BarraInclinada;
+			complex = ComponenteLexico::Division;
 			break;
 		case '*':
-			complex = ComponenteLexico::Asterisco;
-			break;
-		case '.':
-			complex = ComponenteLexico::Punto;
-			break;
-		case ':':
-			complex = ComponenteLexico::DosPuntos;
+			complex = ComponenteLexico::Multiplicacion;
 			break;
 		case ',':
 			complex = ComponenteLexico::Coma;
@@ -296,15 +291,6 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 			break;
 		case '}':
 			complex = ComponenteLexico::LlavesC;
-			break;
-		case '<':
-			complex = ComponenteLexico::Menor;
-			break;
-		case '>':
-			complex = ComponenteLexico::Mayor;
-			break;
-		case '$':
-			complex = ComponenteLexico::Pesos;
 			break;
 		default:
 			esSimbolo = false;

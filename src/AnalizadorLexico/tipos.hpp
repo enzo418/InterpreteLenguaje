@@ -15,9 +15,10 @@ namespace AnalizadorLexico {
 	typedef std::map<std::tuple<ushort, int>, ushort> Delta;
 
 	enum ComponenteLexico {
-		ErrorLexico, Identificador, ConstanteReal, ConstanteEntera, ConstanteCaracter,
-		PuntoComa, Mayor, Menor, Igual, ParantesisA, ParentesisC, LlavesA, LlavesC,
-		Mas, Menos, Asterisco, BarraInclinada, Punto, DosPuntos, Coma, Pesos	
+		Igual, DobleIgual, And, Or, LlavesA, LlavesC, Si, Sino, Mientras, Leer, 
+		Escribir, ParantesisA, ParentesisC, Coma, Mas, Menos, Multiplicacion, 
+		Division, Potencia, RaizCuadrada, Var, Id, Constante, Cadena, OpRel,  ErrorLexico,
+		Menor, Mayor, Diferente, MenorIgual, MayorIgual /* Esta fila no iria */
 	};
 
 	struct ElementoTabla {

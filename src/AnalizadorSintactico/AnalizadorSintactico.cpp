@@ -65,7 +65,7 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 		pilaSimbolos.pop();
 
 		if(EsVariable(X)){
-			Produccion produccion = tas[{X, lexema.c_str()}];
+			Produccion produccion = tas[{X, complex}];
 			if(!produccion.empty()){
 				size_t sz = produccion.size(); 
 				// apilar todos los simbolos (de derecha a izquierda) y crear sus nodos

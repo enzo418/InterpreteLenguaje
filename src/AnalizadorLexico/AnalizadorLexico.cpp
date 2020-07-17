@@ -25,12 +25,14 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	control = fuente.tellg();
 	
 	if (EsIdentificador(fuente, control, lexema)) {
-		complex = ComponenteLexico::Identificador;
+		complex = ComponenteLexico::Id;
 		AgregarEnTablaSimbolos(lexema, complex, ts);
 	} else if (EsConstanteReal(fuente, control, lexema)) {
-		complex = ComponenteLexico::ConstanteReal;
+		complex = ComponenteLexico::Constante;
 	} else if (EsConstanteEntera(fuente, control, lexema)) {
-		complex = ComponenteLexico::ConstanteEntera;
+		complex = ComponenteLexico::Constante;
+	} else if (EsOperadorRelacional(fuente, control, lexema)) {
+		complex = ComponenteLexico::OpRel;
 	} else if (!EsSimboloEspecial(fuente, control, lexema, complex)) {
 		complex = ComponenteLexico::ErrorLexico;
 	}
