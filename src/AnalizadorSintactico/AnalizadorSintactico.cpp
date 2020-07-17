@@ -23,7 +23,7 @@ void AnalizadorSintactico::LimpiarArbol(Nodo* raiz, Nodo* padre = nullptr){
 	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
 }
 
-int AnalizadorSintactico::ObtenerArbolDerivacion(Nodo* arbol, TAS tas, const char* SimboloInicial){
+int AnalizadorSintactico::ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 	Nodo* raiz = arbol;
 
 	Pila pilaSimbolos;
@@ -95,6 +95,6 @@ int AnalizadorSintactico::ObtenerArbolDerivacion(Nodo* arbol, TAS tas, const cha
 		  }
 		}
 	}
-			
+
 	return 0;
 }
