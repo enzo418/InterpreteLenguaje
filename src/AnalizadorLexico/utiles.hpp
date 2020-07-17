@@ -11,6 +11,8 @@ using namespace AnalizadorLexico;
 
 void AgregarEnTablaSimbolos(std::string& lexema, ComponenteLexico& complex, TablaSimbolos& ts);
 
+ComponenteLexico StringAComplex(const char* X);
+
 /*
  * Definiciones
 */

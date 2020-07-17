@@ -260,37 +260,38 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 	char c = '\0';
 	bool esSimbolo = true;
 	fuente.get(c);
-
+	ComponenteLexico cl = ComponenteLexico::ErrorLexico;
+		
 	switch (c) {
 		case '(':
-			complex = ComponenteLexico::ParantesisA;
+			cl = ComponenteLexico::ParantesisA;
 			break;
 		case ')':
-			complex = ComponenteLexico::ParentesisC;
+			cl = ComponenteLexico::ParentesisC;
 			break;
 		case '=':
-			complex = ComponenteLexico::Igual;
+			cl = ComponenteLexico::Igual;
 			break;
 		case '+':
-			complex = ComponenteLexico::Mas;
+			cl = ComponenteLexico::Mas;
 			break;
 		case '-':
-			complex = ComponenteLexico::Menos;
+			cl = ComponenteLexico::Menos;
 			break;
 		case '/':
-			complex = ComponenteLexico::Division;
+			cl = ComponenteLexico::Division;
 			break;
 		case '*':
-			complex = ComponenteLexico::Multiplicacion;
+			cl = ComponenteLexico::Multiplicacion;
 			break;
 		case ',':
-			complex = ComponenteLexico::Coma;
+			cl = ComponenteLexico::Coma;
 			break;
-		case '{':
-			complex = ComponenteLexico::LlavesA;
+		case '{':	
+			cl = ComponenteLexico::LlavesA;
 			break;
 		case '}':
-			complex = ComponenteLexico::LlavesC;
+			cl = ComponenteLexico::LlavesC;
 			break;
 		default:
 			esSimbolo = false;
@@ -299,8 +300,9 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 
 	if (!esSimbolo)
 		fuente.seekg(control); //// Si no es simbolo, volver el cursor a la pos de la cual obtuvimos el caracter
-	else
+	else{
 		lexema = c;
-
+		// complex = cl;
+	}
 	return esSimbolo;
 }

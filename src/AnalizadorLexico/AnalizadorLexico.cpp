@@ -25,7 +25,27 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	control = fuente.tellg();
 	
 	if (EsIdentificador(fuente, control, lexema)) {
-		complex = ComponenteLexico::Id;
+		if(lexema == "var")
+			complex = ComponenteLexico::Var;
+		else if(lexema == "leer")
+			complex = ComponenteLexico::Leer;
+		else if(lexema == "escribir")
+			complex = ComponenteLexico::Escribir;
+		else if(lexema == "mientras")
+			complex = ComponenteLexico::Mientras;
+		else if(lexema == "rcd")
+			complex = ComponenteLexico::RaizCuadrada;
+		else if(lexema == "si")
+			complex = ComponenteLexico::Si;
+		else if(lexema == "sino")
+			complex = ComponenteLexico::Sino;
+		else if(lexema == "and")
+			complex = ComponenteLexico::And;
+		else if(lexema == "or")
+			complex = ComponenteLexico::Or;
+		else
+			complex = ComponenteLexico::Id;
+			
 		AgregarEnTablaSimbolos(lexema, complex, ts);
 	} else if (EsConstanteReal(fuente, control, lexema)) {
 		complex = ComponenteLexico::Constante;

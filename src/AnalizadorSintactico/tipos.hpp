@@ -16,7 +16,24 @@ namespace AnalizadorSintactico{
 		// inicializador
 		Nodo(const char* cont): contenido(cont){}
 	};
+	
+	struct comparador{
+		template<typename T>
+		bool operator()(const T &l, const T &r) const {
+			if(l.first == r.first)
+				return l.second > r.second;
+			return l.first < r.first;
+		}
+	};
 
+	union VarComplex
+	{
+		const char* variable;
+
+		AnalizadorLexico::ComponenteLexico complex;
+	};
+	
+	
 	// Producciones resultantes de un par Variable - Token
 	typedef std::vector<const char*> Produccion;
 

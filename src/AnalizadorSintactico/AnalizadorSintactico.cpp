@@ -43,8 +43,8 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 	}
 	
 	ulong control = 0;
-	std::string lexema;
-	AnalizadorLexico::ComponenteLexico complex;	
+	std::string lexema = "";
+	AnalizadorLexico::ComponenteLexico complex = AnalizadorLexico::ComponenteLexico::Id;	
 
 	AnalizadorLexico::TablaSimbolos ts;
 	
@@ -66,6 +66,12 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 
 		if(EsVariable(X)){
 			Produccion produccion = tas[{X, complex}];
+
+			std::cout 	<< "\nVariable: \n\t"
+						<< "X = " << X 
+						<< " | lexema = " << lexema 
+						<< " | size = " << produccion.size() << std::endl;
+
 			if(!produccion.empty()){
 				size_t sz = produccion.size(); 
 				// apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
@@ -82,15 +88,22 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 			} else {
 				error = true;
 			}
-		} else {
-		  if(X == lexema){
-			if(X == "$"){
-			  exito = true;
+		} else {	
+			std::cout 	<< "\nTerminal: \n\t"
+						<< "X = " << X 
+						<< " | lexema = " << lexema 
+						<< " | igual? " << (StringAComplex(X) == complex ? "si" : "no") << std::endl;
+			if(StringAComplex(X) == complex){
+				if(X == "$"){
+					exito = true;
+				}
+				ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
+				std::cout 	<< "\nObterner nuevo Complex: \n\t"
+							<< "lexema = " << lexema 
+							<< " | control = " << control << std::endl;
+			}else{
+				error = true;
 			}
-			ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
-		  }else{
-			error = true;
-		  }
 		}
 	}
 
