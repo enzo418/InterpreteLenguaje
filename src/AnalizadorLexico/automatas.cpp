@@ -254,7 +254,7 @@ bool EsConstanteEntera(std::ifstream& fuente, ulong& control, std::string& lexem
 
 bool EsOperadorRelacional(std::ifstream& fuente, ulong& control, std::string& lexema) {
 	/// TODO: Hacer automata y ubicarlo aqui
-	return true;
+	return false;
 }
 
 bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexema, ComponenteLexico& complex) {
@@ -303,7 +303,7 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 		fuente.seekg(control); //// Si no es simbolo, volver el cursor a la pos de la cual obtuvimos el caracter
 	else{
 		lexema = c;
-		// complex = cl;
+		complex = cl;
 	}
 	return esSimbolo;
 }

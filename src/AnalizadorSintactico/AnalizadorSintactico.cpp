@@ -30,7 +30,8 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 
 	bool exito = false;
 	bool error = false;
-	
+	std::string mensajeError = "";
+
 	// Declararamos las variables que necesita analizador lexico
 	std::ifstream fuente;
 
@@ -48,6 +49,9 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 
 	AnalizadorLexico::TablaSimbolos ts;
 	
+	// lista de las producciones generadas por una VariablexToken
+	Produccion produccion;
+
 	if (!ObtenerSiguienteComplex(fuente, control, complex, lexema, ts)) {
 		std::cout << "El archivo esta vacio" << std::endl;
 		delete arbol;
@@ -56,6 +60,15 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 
 	// bucle principal del analizador sintactico
 	while (!exito && !error) {      
+		
+		// No deberia ser necesario comprobar esto, ya que el ultimo caracter es $ y deberia parar antes
+		// pero lo voy a dejar hasta que se terminen de completar todos los automatas
+		if (pilaSimbolos.size() == 0) {
+			std::cout << "Evitada excepcion al intentar desapilar de la pila simbolos vacia. Saliendo." << std::endl;
+			error = true;
+			break;
+		}
+
 		// Obtener X
 		std::pair<const char*, Nodo*> par = pilaSimbolos.top();
 		const char* X = par.first;
@@ -65,12 +78,18 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 		pilaSimbolos.pop();
 
 		if(EsVariable(X)){
-			Produccion produccion = tas[{X, complex}];
+			produccion = tas[{X, complex}];
 
-			std::cout 	<< "\nVariable: \n\t"
-						<< "X = " << X 
-						<< " | lexema = " << lexema 
-						<< " | size = " << produccion.size() << std::endl;
+			std::cout << "\nVariable: \n\t"
+				<< "X: " << X
+				<< " | lexema: " << lexema
+				<< " | producciones: ";
+
+			for (auto const& val : produccion) {
+				std::cout << val << " ";
+			}
+
+			std::cout << std::endl;
 
 			if(!produccion.empty()){
 				size_t sz = produccion.size(); 
@@ -83,10 +102,14 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 					// Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
 					if(!EsVariable(produccion[i])) 
 						nodo = nullptr;
-					pilaSimbolos.push(std::pair<const char*, Nodo*>(produccion[i], nodo));
+					
+					// Si es epsilon va en el arbol pero no en la pila de simbolos.
+					if(strcmp(produccion[i], "epsilon") != 0)
+						pilaSimbolos.push(std::pair<const char*, Nodo*>(produccion[i], nodo));
 				}
 			} else {
 				error = true;
+				mensajeError = "Caracter no esperado \"" + lexema + "\" Con la variable " + std::string(X);
 			}
 		} else {	
 			std::cout 	<< "\nTerminal: \n\t"
@@ -94,17 +117,35 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 						<< " | lexema = " << lexema 
 						<< " | igual? " << (StringAComplex(X) == complex ? "si" : "no") << std::endl;
 			if(StringAComplex(X) == complex){
-				if(X == "$"){
+				if(strcmp(X, "$") == 0){
 					exito = true;
 				}
-				ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
+
+				// si no se pudo obtener el siguiente complex significa que llegamos al final del archivo
+				if (!ObtenerSiguienteComplex(fuente, control, complex, lexema, ts)) {
+					lexema = "$";
+					complex = AnalizadorLexico::ComponenteLexico::FDA;
+				}
 				std::cout 	<< "\nObterner nuevo Complex: \n\t"
 							<< "lexema = " << lexema 
 							<< " | control = " << control << std::endl;
 			}else{
 				error = true;
+				mensajeError = "Se esperaba \"" + std::string(X) + "\", se obtuvo \"" + lexema + "\"";
 			}
 		}
+	}
+
+	if (exito)
+		std::cout << "\n# FASE: Analizador Sintactico finalizada sin errores." << std::endl;
+	else {
+		std::cout	<< "\n# FASE: Analizador Sintactico finalizada con un error." << std::endl
+					<< "\t " << mensajeError << std::endl
+
+		/*std::cout << "\t Se esperaba " << produccion[0] << std::endl
+					<< "\t Se encontro " << lexema << std::endl;*/
+					<< "\t En la posicion: " << control << std::endl;
+		
 	}
 
 	return 0;

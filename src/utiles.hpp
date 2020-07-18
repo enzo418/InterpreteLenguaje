@@ -14,8 +14,8 @@ bool AbrirArchivo(std::ifstream& fuente, const char* archivo){
     return true;
 }
 
-Complex StringAComplex(const char* X){
-	Complex c;
+Complex StringAComplex(std::string X){
+	Complex c = Complex::Id;
 	if(X == "=")
 		c=Complex::Igual;
 	else if(X == "==")
@@ -64,7 +64,7 @@ Complex StringAComplex(const char* X){
 		c=Complex::Constante;
 	else if(X == "cadena")
 		c=Complex::Cadena;
-	/*else if(X == "oprel")
+	else if(X == "oprel")
 		c=Complex::OpRel;
 	else if(X == "menor")
 		c=Complex::Menor;
@@ -75,6 +75,8 @@ Complex StringAComplex(const char* X){
 	else if(X == "menorigual")
 		c=Complex::MenorIgual;
 	else if(X == "mayorigual")
-		c=Complex::MayorIgual;*/
+		c=Complex::MayorIgual;
+	else if (X == "$")
+		c = Complex::FDA;
 	return c;
 }
