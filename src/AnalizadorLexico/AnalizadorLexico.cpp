@@ -52,7 +52,18 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	} else if (EsConstanteEntera(fuente, control, lexema)) {
 		complex = ComponenteLexico::Constante;
 	} else if (EsOperadorRelacional(fuente, control, lexema)) {
-		complex = ComponenteLexico::OpRel;
+		/*if(lexema == "==")
+			complex = ComponenteLexico::DobleIgual;
+		else if(lexema == "<")
+			complex = ComponenteLexico::Menor;
+		else if(lexema == ">")
+			complex = ComponenteLexico::Mayor;
+		else if(lexema == "<=")
+			complex = ComponenteLexico::MenorIgual;
+		else if(lexema == ">=")
+			complex = ComponenteLexico::MayorIgual;
+		else*/
+			complex = ComponenteLexico::OpRel;
 	} else if (!EsSimboloEspecial(fuente, control, lexema, complex)) {
 		complex = ComponenteLexico::ErrorLexico;
 	}

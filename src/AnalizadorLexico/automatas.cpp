@@ -253,8 +253,66 @@ bool EsConstanteEntera(std::ifstream& fuente, ulong& control, std::string& lexem
 }
 
 bool EsOperadorRelacional(std::ifstream& fuente, ulong& control, std::string& lexema) {
-	/// TODO: Hacer automata y ubicarlo aqui
-	return false;
+	// -- Definimos el alfabeto de entrada
+	enum Sigma {
+		Mayor, Menor, Igual, Otro
+	};
+
+	auto CarASimbolo = [](char& c) -> Sigma {
+		Sigma t = Sigma::Otro;
+
+		if (c == '>') {
+			t = Sigma::Mayor;
+		} else if (c == '<') {
+			t = Sigma::Menor;
+		} else if (c == '=') {
+			t = Sigma::Igual;
+		}
+
+		return t;
+	};
+
+	Delta delta = {
+		//		 q	 x	simbolo	 ->	q
+			{	{0,		Menor	},	1},
+			{	{0,		Mayor	},	4},
+			{	{0,		Igual	},	3},
+			{	{0,		Otro	},	5},
+
+			{	{1,		Menor	},	5},
+			{	{1,		Mayor	},	2},
+			{	{1,		Igual	},	2},
+			{	{1,		Otro	},	5},
+
+			{	{2,		Menor	},	5},
+			{	{2,		Mayor	},	5},
+			{	{2,		Igual	},	5},
+			{	{2,		Otro	},	5},
+
+			{	{3,		Menor	},	5},
+			{	{3,		Mayor	},	5},
+			{	{3,		Igual	},	2},
+			{	{3,		Otro	},	5},
+
+			{	{4,		Menor	},	5},
+			{	{4,		Mayor	},	5},
+			{	{4,		Igual	},	2},
+			{	{4,		Otro	},	5},
+
+			{	{5,		Menor	},	5},
+			{	{5,		Mayor	},	5},
+			{	{5,		Igual	},	5},
+			{	{5,		Otro	},	5}
+	};
+
+	// -- Definimos los estados finales, el estado muerto y el inicial
+	std::vector<ushort> finales = { 1, 4, 2 };
+	const ushort estadoMuerto = 5;
+	ushort q0 = 0;
+
+	bool esOperadorRelacional = TemplateAutomata(fuente, control, lexema, CarASimbolo, delta, finales, q0, estadoMuerto);
+
+	return esOperadorRelacional;
 }
 
 bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexema, ComponenteLexico& complex) {

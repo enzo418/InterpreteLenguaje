@@ -76,6 +76,8 @@ Complex StringAComplex(std::string X){
 		c=Complex::MenorIgual;
 	else if(X == "mayorigual")
 		c=Complex::MayorIgual;
+	else if (X == "opRel")
+		c = Complex::OpRel;
 	else if (X == "$")
 		c = Complex::FDA;
 	return c;
