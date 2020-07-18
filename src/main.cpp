@@ -27,7 +27,8 @@ int main(){
         { 	{"<Condiciones>",     Complex::RaizCuadrada},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
         { 	{"<Condiciones>",     Complex::Id},						{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
         { 	{"<Condiciones>",     Complex::Constante},				{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-        { 	{"<Condiciones>",     Complex::ParantesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
+     /* { 	{"<Condiciones>",     Complex::ParantesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },*/
+        { 	{"<Condiciones>",     Complex::ParantesisA},			{"(", "<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>", ")", "<A>"} },
         { 	{"<A>",               Complex::And},					{"and", "<Condiciones>"} },
         { 	{"<A>",               Complex::Or},						{"or", "<Condiciones>"} },
         { 	{"<A>",               Complex::ParentesisC},			{"epsilon"} },     
