@@ -7,6 +7,7 @@
 #include "tipos.hpp"
 
 using namespace AnalizadorSintactico;
+using Complex=AnalizadorLexico::ComponenteLexico;
 
 constexpr bool EsVariable(const char* X) { return X[0] == '<' && X[strlen(X)-1] == '>'; }
 
@@ -95,8 +96,13 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 				size_t sz = produccion.size(); 
 				// apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
 				for(int i = sz-1; i >= 0; i--) {
+					// si es un identificador, para el contenido del nodo utilizamos identificador que se encontro
+					// lo mismo si es constante
+					const char* contenido = ((complex == Complex::Id && strcmp(produccion[i], "id") == 0) 
+											|| (complex == Complex::Constante && strcmp(produccion[i], "constante") == 0)) ? lexema.c_str() : produccion[i];
+					
 					// Crear nodo hijo de X en el arbol
-					Nodo* nodo = new Nodo(produccion[i]);
+					Nodo* nodo = new Nodo(contenido);
 					raiz->hijos.push_back(nodo);
 
 					// Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
