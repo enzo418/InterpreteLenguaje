@@ -353,3 +353,5 @@ AnalizadorLexico.workspace
 .codelite/*
 
 out/*
+
+*.txt
