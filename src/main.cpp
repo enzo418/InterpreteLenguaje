@@ -48,6 +48,7 @@ void ArbolAArchivo(AnalizadorSintactico::Nodo* arbol){
 }
 
 int main(){
+    
 	AnalizadorSintactico::TAS tas = 
 	{
         //    Variable          	Token     									Produccion
@@ -63,14 +64,14 @@ int main(){
         { 	{"<Cuerpo>",          Complex::Si},						{"<Sent>", "<Cuerpo>"} },
         { 	{"<Cuerpo>",          Complex::Mientras},				{"<Sent>", "<Cuerpo>"} },
         { 	{"<Sent>",            Complex::Id},						{"id", "=", "<OpAritmeticas>"} },
-        { 	{"<Sent>",            Complex::Leer},					{"leer","(", "cadena", "<OpAritmeticas>",")"} },
-        { 	{"<Sent>",            Complex::Escribir},				{"escribir", "(", "cadena", "<OpAritmeticas>", ")"} },
+        { 	{"<Sent>",            Complex::Leer},					{"leer","(", "cadena", ",", "<OpAritmeticas>",")"} },
+        { 	{"<Sent>",            Complex::Escribir},				{"escribir", "(", "cadena", ",", "<OpAritmeticas>", ")"} },
         { 	{"<Sent>",            Complex::Si},						{"si", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}", "<Sino>"} },
         { 	{"<Sent>",            Complex::Mientras},				{"mientras", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}"} },                 
         { 	{"<Condiciones>",     Complex::RaizCuadrada},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
         { 	{"<Condiciones>",     Complex::Id},						{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
         { 	{"<Condiciones>",     Complex::Constante},				{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-     /* { 	{"<Condiciones>",     Complex::ParantesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },*/
+     // { 	{"<Condiciones>",     Complex::ParantesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
         { 	{"<Condiciones>",     Complex::ParantesisA},			{"(", "<Condiciones>", ")", "<A>"} },
         { 	{"<A>",               Complex::And},					{"and", "<Condiciones>"} },
         { 	{"<A>",               Complex::Or},						{"or", "<Condiciones>"} },

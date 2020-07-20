@@ -315,6 +315,53 @@ bool EsOperadorRelacional(std::ifstream& fuente, ulong& control, std::string& le
 	return esOperadorRelacional;
 }
 
+bool EsCadena(std::ifstream& fuente, ulong& control, std::string& lexema){
+	// -- Definimos el alfabeto de entrada
+	enum Sigma {
+		Comilla, Car, Otro
+	};
+
+	auto CarASimbolo = [](char& c) -> Sigma {
+		Sigma t = Sigma::Otro;
+
+		if (c == '"') {
+			t = Sigma::Comilla;
+		} else if (c >= 32) {
+			t = Sigma::Car;
+		}
+
+		return t;
+	};
+
+	Delta delta = {
+		//		 q	 x	simbolo	 ->	q
+			{	{0,		Comilla	},	1},
+			{	{0,		Car		},	3},
+			{	{0,		Otro	},	3},
+
+			{	{1,		Comilla	},	2},
+			{	{1,		Car		},	1},
+			{	{1,		Otro	},	3},
+
+			{	{2,		Comilla	},	3},
+			{	{2,		Car		},	3},
+			{	{2,		Otro	},	3},
+
+			{	{3,		Comilla	},	3},
+			{	{3,		Car		},	3},
+			{	{3,		Otro	},	3}
+	};
+
+	// -- Definimos los estados finales, el estado muerto y el inicial
+	std::vector<ushort> finales = { 2 };
+	const ushort estadoMuerto = 3;
+	ushort q0 = 0;
+
+	bool esCadena = TemplateAutomata(fuente, control, lexema, CarASimbolo, delta, finales, q0, estadoMuerto);
+
+	return esCadena;
+}
+
 bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexema, ComponenteLexico& complex) {
 	char c = '\0';
 	bool esSimbolo = true;

@@ -10,8 +10,10 @@ namespace AnalizadorSintactico{
 	// Nodo de un arbol
 	struct Nodo {
 		std::string contenido;
-		// std::vector<std::unique_ptr<struct Nodo>> hijos;
+		
 		std::vector<struct Nodo*> hijos;
+
+		AnalizadorLexico::ComponenteLexico complex;
 		
 		// inicializador
 		Nodo(const char* cont): contenido(cont){}

@@ -16,7 +16,6 @@ void LimpiarArbol(Nodo* raiz, Nodo* padre){
 		LimpiarArbol(raiz->hijos[0], raiz);
 	}
 
-	raiz->hijos.~vector(); // Desasignar memoria del vector
 	delete raiz; // Desasignar memoria del Nodo
 
 	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
@@ -48,7 +47,18 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 	std::string lexema = "";
 	AnalizadorLexico::ComponenteLexico complex = AnalizadorLexico::ComponenteLexico::Id;	
 
-	AnalizadorLexico::TablaSimbolos ts;
+	// iniciamos la trabla con las palabras reservadas
+	AnalizadorLexico::TablaSimbolos ts = {
+		{Complex::Si, "si", true},
+		{Complex::Or, "or", true},
+		{Complex::Var, "var", true},
+		{Complex::And, "and", true},
+		{Complex::Sino, "sino", true},
+		{Complex::Leer, "leer", true},	
+		{Complex::RaizCuadrada, "rcd", true},
+		{Complex::Escribir, "escribir", true},
+		{Complex::Mientras, "mientras", true}
+	};
 	
 	// lista de las producciones generadas por una VariablexToken
 	Produccion produccion;
@@ -96,10 +106,15 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 				size_t sz = produccion.size(); 
 				// apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
 				for(int i = sz-1; i >= 0; i--) {
+					/**
+					 * strcmp(x,y): Compara la longitud de la cadena x con la longitud de la cadena y
+					*/
+
 					// si es un identificador, para el contenido del nodo utilizamos identificador que se encontro
-					// lo mismo si es constante
+					// lo mismo si es constante y opRel
 					const char* contenido = ((complex == Complex::Id && strcmp(produccion[i], "id") == 0) 
-											|| (complex == Complex::Constante && strcmp(produccion[i], "constante") == 0)) ? lexema.c_str() : produccion[i];
+											|| (complex == Complex::Constante && strcmp(produccion[i], "constante") == 0)) 
+															? lexema.c_str() : produccion[i];
 					
 					// Crear nodo hijo de X en el arbol
 					Nodo* nodo = new Nodo(contenido);

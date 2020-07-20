@@ -28,6 +28,12 @@ namespace AnalizadorLexico {
 		std::string lexema;
 
 		bool esReservado = false;
+
+		ElementoTabla(ComponenteLexico _c, std::string _l, bool _r){
+			complex=_c;
+			lexema=_l;
+			esReservado=_r;
+		}
 	};
 
 	typedef std::vector<ElementoTabla> TablaSimbolos;
