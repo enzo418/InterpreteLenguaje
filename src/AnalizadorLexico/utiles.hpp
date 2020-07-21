@@ -30,6 +30,16 @@ bool ExisteEnTS(TablaSimbolos& ts, std::string& lexema, ComponenteLexico& comple
 	return false;
 }
 
+ElementoTabla* ObtenerElementoTabla(TablaSimbolos& ts, std::string& lexema){
+	for(ElementoTabla& el: ts){
+		if(el.lexema == lexema){
+			return &el;
+		}
+	}
+
+	return nullptr;
+}
+
 ComponenteLexico StringAComplex(const char* X);
 
 /*

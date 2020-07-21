@@ -14,6 +14,8 @@ namespace AnalizadorSintactico{
 		std::vector<struct Nodo*> hijos;
 
 		AnalizadorLexico::ComponenteLexico complex;
+
+		double* valor;
 		
 		// inicializador
 		Nodo(const char* cont): contenido(cont){}
@@ -38,6 +40,11 @@ namespace AnalizadorSintactico{
 	
 	// Producciones resultantes de un par Variable - Token
 	typedef std::vector<const char*> Produccion;
+
+	/*	std::map<clave, valor>
+	  		map nos ayuda a implementar rapidamente una estructura que almacena los elementos 
+	  		de forma ordenada por clave para asi aplicar la busqueda binaria.
+	*/
 
 	// Tabla de Analisis Sintactico
 	typedef std::map<std::pair<std::string, AnalizadorLexico::ComponenteLexico>, Produccion> TAS;

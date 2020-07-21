@@ -16,6 +16,8 @@ void LimpiarArbol(Nodo* raiz, Nodo* padre){
 		LimpiarArbol(raiz->hijos[0], raiz);
 	}
 
+	delete raiz->valor;
+	
 	delete raiz; // Desasignar memoria del Nodo
 
 	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
@@ -158,9 +160,9 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 	}
 
 	if (exito)
-		std::cout << "\n# FASE: Analizador Sintactico finalizada sin errores." << std::endl;
+		std::cout << "\n# FASE: Analisis finalizada sin errores." << std::endl;
 	else {
-		std::cout	<< "\n# FASE: Analizador Sintactico finalizada con un error." << std::endl
+		std::cout	<< "\n# FASE: Analisis finalizada con un error." << std::endl
 					<< "\t " << mensajeError << std::endl
 
 		/*std::cout << "\t Se esperaba " << produccion[0] << std::endl

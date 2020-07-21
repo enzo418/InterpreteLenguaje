@@ -5,6 +5,8 @@
 #include <sstream>
 #include <fstream>
 
+#include "Sintesis/tipos.hpp"
+
 using Complex=AnalizadorLexico::ComponenteLexico;
 
 void RaizAString(AnalizadorSintactico::Nodo* raiz, std::string& texto){
@@ -115,6 +117,10 @@ int main(){
     int codigo = ObtenerArbolDerivacion(arbol, std::ref(tas), SimboloInicial);
     
     ArbolAArchivo(arbol);
+
+    Sintesis::ListaVarReglas listaVars = {
+        {}
+    };
 
     // por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
 	LimpiarArbol(arbol);
