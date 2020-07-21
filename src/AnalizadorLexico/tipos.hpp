@@ -36,5 +36,9 @@ namespace AnalizadorLexico {
 		}
 	};
 
+	/* 	* para que la busqueda de un elemento sea mas rapida podriamos utilizar el contenedor map de std
+		* con el lexema como llave y el valor como un par de complex y esReservado, ya que map ordena
+		* los elementos por la llave.
+	*/
 	typedef std::vector<ElementoTabla> TablaSimbolos;
 }
