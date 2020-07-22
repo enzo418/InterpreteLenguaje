@@ -113,30 +113,26 @@ void ResolverLista(Sintesis::ListaOperadorDoble* lista, double* res){
 		if(!ExisteMasDeUnOperador(lista)){
 			Complex* complex = (*lista)[1].operador;
 			
-			if(*complex == Complex::Potencia || *complex == Complex::Menos || *complex == Complex::Division){
-				std::reverse(lista->begin(), lista->end());
-			}else{
-				switch (*complex)
-				{
-					case Complex::Mas:
-						SumarLista(lista, res);
-						break;	
-					case Complex::Multiplicacion:
-						MultiplicarLista(lista, res);
-						break;
-					case Complex::Menos:
-						RestarLista(lista, true, res);
-						break;	
-					case Complex::Division:
-						DivisionLista(lista, true, res);
-						break;	
-					case Complex::Potencia:
-						PotenciaLista(lista, res);
-						break;	
-					default:
-						// manejar error operador no reconocido
-						break;
-				}			
+			switch (*complex)
+			{
+				case Complex::Mas:
+					SumarLista(lista, res);
+					break;	
+				case Complex::Multiplicacion:
+					MultiplicarLista(lista, res);
+					break;
+				case Complex::Menos:
+					RestarLista(lista, true, res);
+					break;	
+				case Complex::Division:
+					DivisionLista(lista, true, res);
+					break;	
+				case Complex::Potencia:
+					PotenciaLista(lista, res);
+					break;	
+				default:
+					// manejar error operador no reconocido
+					break;		
 			}
 		}else{
 			// resolver lista respetando la precedencias (RECORDAR! LA LISTA ESTA DADA DADA VUELTA!),
