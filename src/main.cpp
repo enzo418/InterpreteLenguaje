@@ -1,11 +1,11 @@
-#include "AnalizadorSintactico/AnalizadorSintactico.hpp"
 #include <iostream>
 #include <functional>           // std::ref
 
 #include <sstream>
 #include <fstream>
 
-#include "Sintesis/tipos.hpp"
+#include "AnalizadorSintactico/AnalizadorSintactico.hpp"
+// #include "Sintesis/tipos.hpp"
 
 using Complex=AnalizadorLexico::ComponenteLexico;
 
@@ -117,10 +117,10 @@ int main(){
     int codigo = ObtenerArbolDerivacion(arbol, std::ref(tas), SimboloInicial);
     
     ArbolAArchivo(arbol);
-
+/*
     Sintesis::ListaVarReglas listaVars = {
         {}
-    };
+    };*/
 
     // por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
 	LimpiarArbol(arbol);

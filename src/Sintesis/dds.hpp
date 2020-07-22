@@ -1,7 +1,7 @@
 #pragma once
 
-#include "AnalizadorLexico/AnalizadorLexico.hpp"
-#include "AnalizadorSintactico/AnalizadorSintactico.hpp"
+#include "../AnalizadorLexico/tipos.hpp"
+#include "../AnalizadorSintactico/tipos.hpp"
 #include "tipos.hpp"
 
 // En esta funcion se va a implementar la Definicion Dirigida por la Sintaxis

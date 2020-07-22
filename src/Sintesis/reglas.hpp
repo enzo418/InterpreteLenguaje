@@ -6,35 +6,36 @@
 #include "tipos.hpp"
 
 using LOD = Sintesis::ListaOperadorDoble;
+using Complex=AnalizadorLexico::ComponenteLexico;
 
 void AsignarReal(std::string& lexema, AnalizadorLexico::TablaSimbolos& ts);
 
 void CopiarVariable(std::string& lexema, AnalizadorLexico::TablaSimbolos& ts);
 
-void CambiarValorVariable(std::string& lexema, double valor, AnalizadorLexico::TablaSimbolos& ts);
+void CambiarValorVariable(std::string& lexema, Sintesis::ListaOperadorDoble* lista, AnalizadorLexico::TablaSimbolos& ts);
 
 void Leer(std::string& cadena, std::string& var, AnalizadorLexico::TablaSimbolos& ts);
 
 void GuardarValorYCopiarListaT(double& valor, LOD* listaT, LOD* listaOpA);
 
-void GuardarOperadorYCopiarListaOpA(AnalizadorLexico::ComponenteLexico& operador, LOD* listaOpA, LOD* listaT);
+void GuardarOperadorYCopiarListaOpA(Complex& operador, LOD* listaOpA, LOD* listaT);
 
-void ResolverCondicional(LOD* listaOpA1, AnalizadorLexico::ComponenteLexico& operador, LOD* listaOpA2);
+void ResolverCondicional(LOD* listaOpAi, Complex& operador, LOD* listaOpAd, bool& res);
 
-void ResolverLista(LOD* lista, double& res);
+void ResolverLista(LOD* lista, double* res);
 
-//void CalcularOperacion(AnalizadorLexico::ComponenteLexico operador, std::pair<double, double>* operandos, double* val);
+//void CalcularOperacion(Complex operador, std::pair<double, double>* operandos, double* val);
 
-void Escribir(std::string& cadena, double& val);
+void Escribir(std::string& cadena, Sintesis::ListaOperadorDoble* lista);
 
-void Suma(double& a, double &b, double& res);
+void SumarLista(Sintesis::ListaOperadorDoble* lista, double* res);
 
-void Resta(double& a, double &b, double& res);
+void RestarLista(Sintesis::ListaOperadorDoble* lista, double* res);
 
-void Multiplicacion(double& a, double &b, double& res);
+void MultiplicarLista(Sintesis::ListaOperadorDoble* lista, double* res);
 
-void Division(double& a, double &b, double& res);
+void DividirLista(Sintesis::ListaOperadorDoble* lista, bool invertida, double* res);
 
-void Potencia(double& a, double &b, double& res);
+void PotenciaLista(Sintesis::ListaOperadorDoble* lista, double* res);
 
 void RaizCuadrada(double& a, double& res);
