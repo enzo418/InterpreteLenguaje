@@ -2,6 +2,7 @@
 #include "string.h"
 #include "AnalizadorSintactico.hpp"
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
+#include "../AnalizadorLexico/utiles.hpp"
 #include "../utiles.hpp"
 #include "../tipos.hpp"
 #include "tipos.hpp"
@@ -23,7 +24,7 @@ void LimpiarArbol(Nodo* raiz, Nodo* padre){
 	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
 }
 
-int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
+int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolos& ts, const char* SimboloInicial){
 	Nodo* raiz = arbol;
 
 	Pila pilaSimbolos;
@@ -49,18 +50,6 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, const char* SimboloInicial){
 	std::string lexema = "";
 	AnalizadorLexico::ComponenteLexico complex = AnalizadorLexico::ComponenteLexico::Id;	
 
-	// iniciamos la trabla con las palabras reservadas
-	AnalizadorLexico::TablaSimbolos ts = {
-		{Complex::Si, "si", true},
-		{Complex::Or, "or", true},
-		{Complex::Var, "var", true},
-		{Complex::And, "and", true},
-		{Complex::Sino, "sino", true},
-		{Complex::Leer, "leer", true},	
-		{Complex::RaizCuadrada, "rcd", true},
-		{Complex::Escribir, "escribir", true},
-		{Complex::Mientras, "mientras", true}
-	};
 	
 	// lista de las producciones generadas por una VariablexToken
 	Produccion produccion;

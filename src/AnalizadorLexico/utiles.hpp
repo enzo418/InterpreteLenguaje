@@ -3,13 +3,7 @@
 #include <iostream>
 #include "tipos.hpp"
 
-using namespace AnalizadorLexico;
-
-/*
- * Declaraciones
-*/
-
-void AgregarEnTablaSimbolos(std::string& lexema, ComponenteLexico& complex, TablaSimbolos& ts);
+void AgregarEnTablaSimbolos(std::string& lexema, AnalizadorLexico::ComponenteLexico& complex, AnalizadorLexico::TablaSimbolos& ts);
 
 /*	ExisteEnTS
 		* Devuelve verdadero si el lexema esta en la tabla de simbolos, 
@@ -20,33 +14,8 @@ void AgregarEnTablaSimbolos(std::string& lexema, ComponenteLexico& complex, Tabl
 		* 	lexema: 	Cadena con la cual se va a verificar si el identificador esta en la tabla
 		*  complex: 	Componente lexico pasado como referencia que se va a actualizar al complex del elemento coincidente (si se encontro)
 */
-bool ExisteEnTS(TablaSimbolos& ts, std::string& lexema, ComponenteLexico& complex){
-	for(ElementoTabla const& el: ts){
-		if(el.lexema == lexema){
-			complex = el.complex;
-			return true;
-		}
-	}
-	return false;
-}
+bool ExisteEnTS(AnalizadorLexico::TablaSimbolos& ts, std::string& lexema, AnalizadorLexico::ComponenteLexico& complex);
 
-ElementoTabla* ObtenerElementoTabla(TablaSimbolos& ts, std::string& lexema){
-	for(ElementoTabla& el: ts){
-		if(el.lexema == lexema){
-			return &el;
-		}
-	}
+AnalizadorLexico::ElementoTabla* ObtenerElementoTabla(AnalizadorLexico::TablaSimbolos& ts, std::string& lexema);
 
-	return nullptr;
-}
-
-ComponenteLexico StringAComplex(const char* X);
-
-/*
- * Definiciones
-*/
-
-void AgregarEnTablaSimbolos(std::string& lexema, ComponenteLexico& complex, TablaSimbolos& ts) {
-	ElementoTabla el(complex, lexema, false);
-	ts.push_back(el);
-}
+AnalizadorLexico::ComponenteLexico StringAComplex(std::string X);

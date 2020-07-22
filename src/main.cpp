@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
-// #include "Sintesis/tipos.hpp"
+#include "Sintesis/dds.hpp"
 
 using Complex=AnalizadorLexico::ComponenteLexico;
 
@@ -109,20 +109,34 @@ int main(){
         { 	{"<IdConst>",         Complex::Constante},				{"constante"} },
         { 	{"<IdConst>",         Complex::ParantesisA},			{"(", "<OpAritmeticas>", ")"} }
 	};
-    
+   
+	// iniciamos la tabla con las palabras reservadas
+	AnalizadorLexico::TablaSimbolos ts = {
+		{Complex::Si, "si", true},
+		{Complex::Or, "or", true},
+		{Complex::Var, "var", true},
+		{Complex::And, "and", true},
+		{Complex::Sino, "sino", true},
+		{Complex::Leer, "leer", true},	
+		{Complex::RaizCuadrada, "rcd", true},
+		{Complex::Escribir, "escribir", true},
+		{Complex::Mientras, "mientras", true}
+	};
+
 	const char* SimboloInicial = "<Programa>";
 
     AnalizadorSintactico::Nodo* arbol = new AnalizadorSintactico::Nodo(SimboloInicial);
 
-    int codigo = ObtenerArbolDerivacion(arbol, std::ref(tas), SimboloInicial);
+    int codigo = ObtenerArbolDerivacion(arbol, std::ref(tas), std::ref(ts), SimboloInicial);
     
     ArbolAArchivo(arbol);
-/*
-    Sintesis::ListaVarReglas listaVars = {
+    
+    Sintesis::ListaVarReglas tablaVars = {
         {}
-    };*/
+    };
 
-    // por ahora limpiamos el arbol, si quisieramos utilizar el interprete tendriamos que guardarlo.
+    DDS(ts, arbol, tablaVars);
+
 	LimpiarArbol(arbol);
     
     return 0;

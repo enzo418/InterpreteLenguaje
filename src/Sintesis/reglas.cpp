@@ -1,10 +1,13 @@
 #include "reglas.hpp"
-#include "../AnalizadorLexico/utiles.hpp"
+
 #include <math.h> 
-#include "tipos.hpp"
-#include "utiles.hpp"
 #include <algorithm> // std::reverse
 #include <iterator> // std::advance
+
+#include "../AnalizadorLexico/utiles.hpp"
+
+#include "tipos.hpp"
+#include "utiles.hpp"
 
 using Complex=AnalizadorLexico::ComponenteLexico;
 
@@ -105,24 +108,34 @@ void ResolverCondicional(LOD* listaOpAi, Complex& operador, LOD* listaOpAd, bool
 // En esta funcion se calcula el valor numerico de una lista de Operador-Doble
 void ResolverLista(Sintesis::ListaOperadorDoble* lista, double* res){
 	if(lista->size() == 1){
-		res = lista->at(0).valor;
+		*res = *(*lista)[0].valor;
 	}else{
 		if(!ExisteMasDeUnOperador(lista)){
-			Complex* complex = lista->at(1).operador;
+			Complex* complex = (*lista)[1].operador;
 			
 			if(*complex == Complex::Potencia || *complex == Complex::Menos || *complex == Complex::Division){
 				std::reverse(lista->begin(), lista->end());
 			}else{
 				switch (*complex)
 				{
-				case Complex::Mas:
-					SumarLista(lista, res);
-					break;	
-				case Complex::Multiplicacion:
-					MultiplicarLista(lista, res);
-					break;			
-				default:
-					break;
+					case Complex::Mas:
+						SumarLista(lista, res);
+						break;	
+					case Complex::Multiplicacion:
+						MultiplicarLista(lista, res);
+						break;
+					case Complex::Menos:
+						RestarLista(lista, true, res);
+						break;	
+					case Complex::Division:
+						DivisionLista(lista, true, res);
+						break;	
+					case Complex::Potencia:
+						PotenciaLista(lista, res);
+						break;	
+					default:
+						// manejar error operador no reconocido
+						break;
 				}			
 			}
 		}else{
@@ -131,14 +144,6 @@ void ResolverLista(Sintesis::ListaOperadorDoble* lista, double* res){
 		}
 	}
 }
-
-/*
-void CalcularOperacion(AnalizadorLexico::ComponenteLexico* operador, std::pair<double, double>* operandos, double* val){
-	// si el operador es un nullptr quiere decir que la produccion hijo T de OpAritmeticas se derivo en epsilon, no hay op.
-	if(!operador){
-		
-	}
-}*/
 
 void Escribir(std::string& cadena, Sintesis::ListaOperadorDoble* lista){
 	// inicializamos valor en 0
@@ -157,37 +162,60 @@ void SumarLista(Sintesis::ListaOperadorDoble* lista, double* res){
 		if(el.valor) *res += *el.valor;					
 }
 
-void RestarLista(Sintesis::ListaOperadorDoble* lista, double* res){
-	for (auto &el : *(lista)) 
-		if(el.valor) *res -= *el.valor;	
+void RestarLista(Sintesis::ListaOperadorDoble* lista, bool invertida, double* res){
+	// ej. entrada {10,-,2,-,2}
+	if(invertida){
+		// {2,-,2,-,10} -leer> {2, ,2, ,10}
+		*res = *(lista->back().valor) * 2;
+		for(auto it = lista->rbegin(); it < lista->rend(); std::advance(it, 2))
+        	if(it->valor) *res -= *it->valor;
+	}else{
+		// {10,-,2,-,2} -leer> {10, 2, ,2}
+		*res = *(*lista)[0].valor * 2;
+		for (auto it = lista->begin(); it < lista->end(); std::advance(it, 2)) 
+			if(it->valor) *res -= *it->valor;    
+	}
 }
 
 void MultiplicarLista(Sintesis::ListaOperadorDoble* lista, double* res){	
 	*res = 1;
-	for (auto &el : *(lista)) 
-		if(el.valor) *res *= *el.valor;
+	for (auto it = lista->begin(); it < lista->end(); std::advance(it, 2)) 
+		*res *= *it->valor;  
 }
 
-void DividirLista(Sintesis::ListaOperadorDoble* lista, bool invertida, double* res){	
-	// {10,/,2,/,2}
+void DivisionLista(Sintesis::ListaOperadorDoble* lista, bool invertida, double* res){	
+	// ej. entrada {10,/,2,/,2}
 	if(invertida){
-		// {2,/,2,/,10}
+		// {10,/,2,/,2} -leer> {2, 2, 10}
 		*res = *lista->back().valor;
-		for(auto it = lista->rbegin()+1; it != lista->rend(); it++)
-        	if(it->valor) *res /= *it->valor;
+
+		auto it = lista->rbegin();
+		std::advance(it, 2);
+
+		for(; it < lista->rend(); std::advance(it, 2))
+        	*res /= *it->valor;
 	}else{
-		// {10,/,2,/,2}
+		// {10,/,2,/,2} -leer> {10, 2, 2}
 		*res = *(*lista)[0].valor;
-		for (auto it = lista->begin()+1; it != lista->end(); it++) 
-			if(it->valor) *res /= *it->valor;    
+
+		auto it = lista->begin();
+		std::advance(it, 2);
+
+		for (; it < lista->end(); std::advance(it, 2)) 
+			*res /= *it->valor;    
 	}
 }
 
-void PotenciaLista(Sintesis::ListaOperadorDoble* lista, double* res){
-	for (auto &el : *(lista)) 
-		if(el.valor) *res /= *el.valor;
+void PotenciaLista(Sintesis::ListaOperadorDoble* lista, double* res){	
+	// {10,^,2,^,2} -leer> {10, 2, 2}		
+	*res = *(*lista)[0].valor;
+	auto it = lista->begin();
+	std::advance(it, 2);
+
+	for (; it < lista->end(); std::advance(it, 2)) 
+		*res = pow(*it->valor, *res);
 }
 
-void RaizCuadrada(double& a, double& res){
-	res = sqrt(a);
+void RaizCuadrada(double* a, double* res){
+	*res = sqrt(*a);
 }

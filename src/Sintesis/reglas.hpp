@@ -24,18 +24,16 @@ void ResolverCondicional(LOD* listaOpAi, Complex& operador, LOD* listaOpAd, bool
 
 void ResolverLista(LOD* lista, double* res);
 
-//void CalcularOperacion(Complex operador, std::pair<double, double>* operandos, double* val);
-
 void Escribir(std::string& cadena, Sintesis::ListaOperadorDoble* lista);
 
 void SumarLista(Sintesis::ListaOperadorDoble* lista, double* res);
 
-void RestarLista(Sintesis::ListaOperadorDoble* lista, double* res);
+void RestarLista(Sintesis::ListaOperadorDoble* lista, bool invertida, double* res);
 
 void MultiplicarLista(Sintesis::ListaOperadorDoble* lista, double* res);
 
-void DividirLista(Sintesis::ListaOperadorDoble* lista, bool invertida, double* res);
+void DivisionLista(Sintesis::ListaOperadorDoble* lista, bool invertida, double* res);
 
 void PotenciaLista(Sintesis::ListaOperadorDoble* lista, double* res);
 
-void RaizCuadrada(double& a, double& res);
+void RaizCuadrada(double* a, double* res);
