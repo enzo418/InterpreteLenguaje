@@ -55,7 +55,6 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 
 	if (!ObtenerSiguienteComplex(fuente, control, complex, lexema, ts)) {
 		std::cout << "El archivo esta vacio" << std::endl;
-		delete arbol;
 		return 0;
 	}
 
