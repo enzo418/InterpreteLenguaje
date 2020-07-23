@@ -73,8 +73,8 @@ int main(){
         { 	{"<Condiciones>",     Complex::RaizCuadrada},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
         { 	{"<Condiciones>",     Complex::Id},						{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
         { 	{"<Condiciones>",     Complex::Constante},				{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-     // { 	{"<Condiciones>",     Complex::ParantesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-        { 	{"<Condiciones>",     Complex::ParantesisA},			{"(", "<Condiciones>", ")", "<A>"} },
+     // { 	{"<Condiciones>",     Complex::ParentesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
+        { 	{"<Condiciones>",     Complex::ParentesisA},			{"(", "<Condiciones>", ")", "<A>"} },
         { 	{"<A>",               Complex::And},					{"and", "<Condiciones>"} },
         { 	{"<A>",               Complex::Or},						{"or", "<Condiciones>"} },
         { 	{"<A>",               Complex::ParentesisC},			{"epsilon"} },     
@@ -88,7 +88,7 @@ int main(){
         { 	{"<OpAritmeticas>",   Complex::RaizCuadrada},			{"<IdConst>", "<T>"} },
         { 	{"<OpAritmeticas>",   Complex::Id},						{"<IdConst>", "<T>"} },
         { 	{"<OpAritmeticas>",   Complex::Constante},				{"<IdConst>", "<T>"} },
-        { 	{"<OpAritmeticas>",   Complex::ParantesisA},			{"<IdConst>", "<T>"} },
+        { 	{"<OpAritmeticas>",   Complex::ParentesisA},			{"<IdConst>", "<T>"} },
         { 	{"<T>",               Complex::Mas},					{"+", "<OpAritmeticas>"} },
         { 	{"<T>",               Complex::Menos},					{"-", "<OpAritmeticas>"} },
         { 	{"<T>",               Complex::Division},				{"/", "<OpAritmeticas>"} },
@@ -107,7 +107,7 @@ int main(){
         { 	{"<IdConst>",         Complex::RaizCuadrada},			{"rcd", "(", "<OpAritmeticas>", ")"} },
         { 	{"<IdConst>",         Complex::Id},						{"id"} },
         { 	{"<IdConst>",         Complex::Constante},				{"constante"} },
-        { 	{"<IdConst>",         Complex::ParantesisA},			{"(", "<OpAritmeticas>", ")"} }
+        { 	{"<IdConst>",         Complex::ParentesisA},			{"(", "<OpAritmeticas>", ")"} }
 	};
    
 	// iniciamos la tabla con las palabras reservadas
@@ -132,7 +132,9 @@ int main(){
     ArbolAArchivo(arbol);
     
     Sintesis::ListaVarReglas tablaVars = {
-        {{"<IdVar>", "epsilon"}, "AsignarReal"},
+        {{"<Variables>", "id"}, "AsignarReal"},
+
+		{{"<IdVar>", ","}, "AsignarReal"},
 
         {{"<Sent>", "id"}, "CambiarValorVariable"},
         {{"<Sent>", "leer"}, "Leer"},

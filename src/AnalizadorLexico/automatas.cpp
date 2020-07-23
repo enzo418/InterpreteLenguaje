@@ -370,7 +370,7 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 		
 	switch (c) {
 		case '(':
-			cl = ComponenteLexico::ParantesisA;
+			cl = ComponenteLexico::ParentesisA;
 			break;
 		case ')':
 			cl = ComponenteLexico::ParentesisC;

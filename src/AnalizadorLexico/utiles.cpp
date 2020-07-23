@@ -54,7 +54,7 @@ Complex StringAComplex(std::string X){
 	else if(X == "escribir")
 		c=Complex::Escribir;
 	else if(X == "(")
-		c=Complex::ParantesisA;
+		c=Complex::ParentesisA;
 	else if(X == ")")
 		c=Complex::ParentesisC;
 	else if(X == ",")
