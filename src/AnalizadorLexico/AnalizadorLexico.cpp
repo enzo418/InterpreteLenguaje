@@ -25,15 +25,38 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	control = fuente.tellg();
 	
 	if (EsIdentificador(fuente, control, lexema)) {
-		complex = ComponenteLexico::Identificador;
-		AgregarEnTablaSimbolos(lexema, complex, ts);
+		complex = ComponenteLexico::Id;
+		
+		if(!ExisteEnTS(ts, lexema, complex)){			
+			AgregarEnTablaSimbolos(lexema, complex, ts);
+		}
 	} else if (EsConstanteReal(fuente, control, lexema)) {
-		complex = ComponenteLexico::ConstanteReal;
+		complex = ComponenteLexico::Constante;
 	} else if (EsConstanteEntera(fuente, control, lexema)) {
-		complex = ComponenteLexico::ConstanteEntera;
+		complex = ComponenteLexico::Constante;
+	} else if (EsOperadorRelacional(fuente, control, lexema)) {
+		/*if(lexema == "==")
+			complex = ComponenteLexico::DobleIgual;
+		else if(lexema == "<")
+			complex = ComponenteLexico::Menor;
+		else if(lexema == ">")
+			complex = ComponenteLexico::Mayor;
+		else if(lexema == "<=")
+			complex = ComponenteLexico::MenorIgual;
+		else if(lexema == ">=")
+			complex = ComponenteLexico::MayorIgual;
+		else*/
+			complex = ComponenteLexico::OpRel;
+	} else if (EsCadena(fuente, control, lexema)){
+		complex = ComponenteLexico::Cadena;
 	} else if (!EsSimboloEspecial(fuente, control, lexema, complex)) {
 		complex = ComponenteLexico::ErrorLexico;
+		lexema = "";
 	}
 
 	return true;
+}
+
+void CargarTablaSimbolos(TablaSimbolos& tabla, TablaSimbolos contenido){
+
 }

@@ -252,59 +252,152 @@ bool EsConstanteEntera(std::ifstream& fuente, ulong& control, std::string& lexem
 	return esConstEntera;
 }
 
+bool EsOperadorRelacional(std::ifstream& fuente, ulong& control, std::string& lexema) {
+	// -- Definimos el alfabeto de entrada
+	enum Sigma {
+		Mayor, Menor, Igual, Otro
+	};
+
+	auto CarASimbolo = [](char& c) -> Sigma {
+		Sigma t = Sigma::Otro;
+
+		if (c == '>') {
+			t = Sigma::Mayor;
+		} else if (c == '<') {
+			t = Sigma::Menor;
+		} else if (c == '=') {
+			t = Sigma::Igual;
+		}
+
+		return t;
+	};
+
+	Delta delta = {
+		//		 q	 x	simbolo	 ->	q
+			{	{0,		Menor	},	1},
+			{	{0,		Mayor	},	4},
+			{	{0,		Igual	},	3},
+			{	{0,		Otro	},	5},
+
+			{	{1,		Menor	},	5},
+			{	{1,		Mayor	},	2},
+			{	{1,		Igual	},	2},
+			{	{1,		Otro	},	5},
+
+			{	{2,		Menor	},	5},
+			{	{2,		Mayor	},	5},
+			{	{2,		Igual	},	5},
+			{	{2,		Otro	},	5},
+
+			{	{3,		Menor	},	5},
+			{	{3,		Mayor	},	5},
+			{	{3,		Igual	},	2},
+			{	{3,		Otro	},	5},
+
+			{	{4,		Menor	},	5},
+			{	{4,		Mayor	},	5},
+			{	{4,		Igual	},	2},
+			{	{4,		Otro	},	5},
+
+			{	{5,		Menor	},	5},
+			{	{5,		Mayor	},	5},
+			{	{5,		Igual	},	5},
+			{	{5,		Otro	},	5}
+	};
+
+	// -- Definimos los estados finales, el estado muerto y el inicial
+	std::vector<ushort> finales = { 1, 4, 2 };
+	const ushort estadoMuerto = 5;
+	ushort q0 = 0;
+
+	bool esOperadorRelacional = TemplateAutomata(fuente, control, lexema, CarASimbolo, delta, finales, q0, estadoMuerto);
+
+	return esOperadorRelacional;
+}
+
+bool EsCadena(std::ifstream& fuente, ulong& control, std::string& lexema){
+	// -- Definimos el alfabeto de entrada
+	enum Sigma {
+		Comilla, Car, Otro
+	};
+
+	auto CarASimbolo = [](char& c) -> Sigma {
+		Sigma t = Sigma::Otro;
+
+		if (c == '"') {
+			t = Sigma::Comilla;
+		} else if (c >= 32) {
+			t = Sigma::Car;
+		}
+
+		return t;
+	};
+
+	Delta delta = {
+		//		 q	 x	simbolo	 ->	q
+			{	{0,		Comilla	},	1},
+			{	{0,		Car		},	3},
+			{	{0,		Otro	},	3},
+
+			{	{1,		Comilla	},	2},
+			{	{1,		Car		},	1},
+			{	{1,		Otro	},	3},
+
+			{	{2,		Comilla	},	3},
+			{	{2,		Car		},	3},
+			{	{2,		Otro	},	3},
+
+			{	{3,		Comilla	},	3},
+			{	{3,		Car		},	3},
+			{	{3,		Otro	},	3}
+	};
+
+	// -- Definimos los estados finales, el estado muerto y el inicial
+	std::vector<ushort> finales = { 2 };
+	const ushort estadoMuerto = 3;
+	ushort q0 = 0;
+
+	bool esCadena = TemplateAutomata(fuente, control, lexema, CarASimbolo, delta, finales, q0, estadoMuerto);
+
+	return esCadena;
+}
+
 bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexema, ComponenteLexico& complex) {
 	char c = '\0';
 	bool esSimbolo = true;
 	fuente.get(c);
-
+	ComponenteLexico cl = ComponenteLexico::ErrorLexico;
+		
 	switch (c) {
 		case '(':
-			complex = ComponenteLexico::ParantesisA;
+			cl = ComponenteLexico::ParentesisA;
 			break;
 		case ')':
-			complex = ComponenteLexico::ParentesisC;
-			break;
-		case ';':
-			complex = ComponenteLexico::PuntoComa;
+			cl = ComponenteLexico::ParentesisC;
 			break;
 		case '=':
-			complex = ComponenteLexico::Igual;
+			cl = ComponenteLexico::Igual;
 			break;
 		case '+':
-			complex = ComponenteLexico::Mas;
+			cl = ComponenteLexico::Mas;
 			break;
 		case '-':
-			complex = ComponenteLexico::Menos;
+			cl = ComponenteLexico::Menos;
 			break;
 		case '/':
-			complex = ComponenteLexico::BarraInclinada;
+			cl = ComponenteLexico::Division;
 			break;
 		case '*':
-			complex = ComponenteLexico::Asterisco;
-			break;
-		case '.':
-			complex = ComponenteLexico::Punto;
-			break;
-		case ':':
-			complex = ComponenteLexico::DosPuntos;
+			cl = ComponenteLexico::Multiplicacion;
 			break;
 		case ',':
-			complex = ComponenteLexico::Coma;
+			cl = ComponenteLexico::Coma;
 			break;
-		case '{':
-			complex = ComponenteLexico::LlavesA;
+		case '{':	
+			cl = ComponenteLexico::LlavesA;
 			break;
 		case '}':
-			complex = ComponenteLexico::LlavesC;
-			break;
-		case '<':
-			complex = ComponenteLexico::Menor;
-			break;
-		case '>':
-			complex = ComponenteLexico::Mayor;
-			break;
-		case '$':
-			complex = ComponenteLexico::Pesos;
+			cl = ComponenteLexico::LlavesC;
 			break;
 		default:
 			esSimbolo = false;
@@ -313,8 +406,9 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 
 	if (!esSimbolo)
 		fuente.seekg(control); //// Si no es simbolo, volver el cursor a la pos de la cual obtuvimos el caracter
-	else
+	else{
 		lexema = c;
-
+		complex = cl;
+	}
 	return esSimbolo;
 }
