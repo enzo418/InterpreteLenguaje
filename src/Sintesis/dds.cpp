@@ -43,6 +43,8 @@ void EjecutarReglas(Nodo* raiz, Sintesis::ListaVarReglas &reglas, AnalizadorLexi
 	Nodo* primerHijo = raiz->hijos[0];
 
 	const char* regla = reglas[{raiz->contenido, primerHijo->contenido}];
+	
+	std::cout << raiz->contenido << " x " << primerHijo->contenido << " => Regla: " << regla << std::endl;
 
 	if(_Iguales(regla, "AsignarReal")){
 		if(primerHijo->complex == Complex::Id)
@@ -67,7 +69,7 @@ void EjecutarReglas(Nodo* raiz, Sintesis::ListaVarReglas &reglas, AnalizadorLexi
 		CopiarValorDeId(raiz->hijos[0]->lexema, raiz->valor, ts);
 	} else if(_Iguales(regla, "CopiarValorDeHijo")){
 		CopiarValorDeHijo(raiz->valor, raiz->hijos[0]->valor);
-	} 
+	}
 }
 
 void ResolverSi(Nodo* raizCondiciones, Nodo* raizCuerpo, Nodo* raizSino, Sintesis::ListaVarReglas &reglas, AnalizadorLexico::TablaSimbolos& ts) {
