@@ -2,18 +2,19 @@
 #include <iostream>
 #include <map>
 #include <vector>
-
 #include "../AnalizadorSintactico/AnalizadorSintactico.hpp"
 #include "../AnalizadorLexico/tipos.hpp"
 
 namespace Sintesis{    
-    // utilizamos punteros para saber cual es el elemento activo, sino caeria en UB
-    union OperadorDoble {
-        double* valor;
-        AnalizadorLexico::ComponenteLexico* operador;
+    typedef std::vector<double> ListaOperandos;
+    typedef std::vector<AnalizadorLexico::ComponenteLexico> ListaOperadores;
+
+    struct ListaOperadoresOperando{
+        ListaOperadores operadores;
+        ListaOperandos operandos;
     };
-    
-    typedef std::vector<OperadorDoble> ListaOperadorDoble;
+
+    typedef unsigned char uchar;
 
     /* std::multimap<clave, valor>
             multimap tiene los mismos beneficios que map, solamente que permite mas de una clave igual

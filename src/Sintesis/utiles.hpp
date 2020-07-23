@@ -6,4 +6,4 @@
 
 using Complex=AnalizadorLexico::ComponenteLexico;
 
-bool ExisteMasDeUnOperador(Sintesis::ListaOperadorDoble* lista);
+//bool ExisteMasDeUnOperador(Sintesis::ListaOperadorDoble* lista);

@@ -3,6 +3,7 @@
 
 using Complex=AnalizadorLexico::ComponenteLexico;
 
+/*
 bool ExisteMasDeUnOperador(Sintesis::ListaOperadorDoble* lista){
 	Complex* ultimoOperador = nullptr;
 
@@ -20,4 +21,4 @@ bool ExisteMasDeUnOperador(Sintesis::ListaOperadorDoble* lista){
 	}
 
 	return false;
-}
+}*/
