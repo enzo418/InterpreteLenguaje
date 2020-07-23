@@ -6,6 +6,7 @@
 #include "../utiles.hpp"
 #include "../tipos.hpp"
 #include "tipos.hpp"
+#include "../Sintesis/tipos.hpp"
 
 using namespace AnalizadorSintactico;
 using Complex=AnalizadorLexico::ComponenteLexico;
@@ -16,8 +17,6 @@ void LimpiarArbol(Nodo* raiz, Nodo* padre){
 	while(raiz->hijos.size() > 0){
 		LimpiarArbol(raiz->hijos[0], raiz);
 	}
-
-	delete raiz->valor;
 	
 	delete raiz; // Desasignar memoria del Nodo
 
@@ -100,16 +99,18 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 					/**
 					 * strcmp(x,y): Compara la longitud de la cadena x con la longitud de la cadena y
 					*/
-
-					// si es un identificador, para el contenido del nodo utilizamos identificador que se encontro
-					// lo mismo si es constante y opRel
-					const char* contenido = ((complex == Complex::Id && strcmp(produccion[i], "id") == 0) 
-											|| (complex == Complex::Constante && strcmp(produccion[i], "constante") == 0)) 
-															? lexema.c_str() : produccion[i];
-					
+				
 					// Crear nodo hijo de X en el arbol
-					Nodo* nodo = new Nodo(contenido);
+					Nodo* nodo = new Nodo(produccion[i]);
 					raiz->hijos.push_back(nodo);
+
+					nodo->complex = StringAComplex(produccion[i]);
+
+					if(complex == Complex::Id && strcmp(produccion[i], "id")){
+						nodo->lexema = lexema.c_str();
+					}else if(complex == Complex::Constante && strcmp(produccion[i], "constante")){
+						nodo->valor = new double(std::stod(lexema.c_str()));
+					}
 
 					// Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
 					if(!EsVariable(produccion[i])) 

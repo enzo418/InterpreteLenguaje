@@ -75,6 +75,8 @@ size_t EncontrarPosicionParentesisC(Sintesis::ListaOperadores& lista, size_t& po
 			else profundidad--;
 		}
 	}
+    
+    return 0;
 }
 
 double CalcularValorLista(Sintesis::ListaOperadores& operadores, Sintesis::ListaOperandos& operandos) {

@@ -132,10 +132,30 @@ int main(){
     ArbolAArchivo(arbol);
     
     Sintesis::ListaVarReglas tablaVars = {
-        {}
-    };
+        {{"<IdVar>", "epsilon"}, "AsignarReal"},
 
-    DDS(ts, arbol, tablaVars);
+        {{"<Sent>", "id"}, "CambiarValorVariable"},
+        {{"<Sent>", "leer"}, "Leer"},
+        {{"<Sent>", "escribir"}, "Escribir"},
+
+        {{"<Condiciones>", "<OpAritmeticas>"}, "ResolverCondicional"},
+
+        {{"<OpAritmeticas>", "<IdConst>"}, "GuardarValorYCopiarListaT"},
+        
+        {{"<T>", "+"}, "GuardarOperadorYCopiarListaOpA"},
+        {{"<T>", "-"}, "GuardarOperadorYCopiarListaOpA"},
+        {{"<T>", "*"}, "GuardarOperadorYCopiarListaOpA"},
+        {{"<T>", "/"}, "GuardarOperadorYCopiarListaOpA"},
+        {{"<T>", "^"}, "GuardarOperadorYCopiarListaOpA"},
+        //{{"<T>", "epsilon"}, "GuardarOperadorYCopiarListaOpA"},
+
+        {{"<IdConst>", "id"}, "CopiarValorDeHijo"},
+        {{"<IdConst>", "constante"}, "CopiarValorDeHijo"},
+        {{"<IdConst>", "("}, "CopiarValorDeHijo"},
+        {{"<IdConst>", "rcd"}, "RaizCuadrada"},
+    };
+    
+    //DDS(ts, arbol, tablaVars);
 
 	LimpiarArbol(arbol);
     

@@ -6,6 +6,8 @@
 #include <stack>
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
 
+#include "../Sintesis/tipos.hpp"
+
 namespace AnalizadorSintactico{
 	// Nodo de un arbol
 	struct Nodo {
@@ -15,10 +17,23 @@ namespace AnalizadorSintactico{
 
 		AnalizadorLexico::ComponenteLexico complex;
 
-		double* valor;
+		// la iniciamos con nullptr asi no le asigna una direccion cualquiera
+		double* valor = nullptr; 
+
+		const char* lexema;
+
+		Sintesis::ListaOperadoresOperando* listaOO = nullptr;
 		
 		// inicializador
 		Nodo(const char* cont): contenido(cont){}
+
+		~Nodo(){
+			if(valor)
+			 	delete valor;
+			
+			if(listaOO)
+				delete listaOO;			
+		}
 	};
 	
 	struct comparador{

@@ -21,6 +21,10 @@ void AsignarReal(std::string& lexema, AnalizadorLexico::TablaSimbolos& ts){
 	} // else... manejar error de identificador no válido.	
 }
 
+void CopiarValorDeHijo(double* destino, double* fuente){
+	destino = fuente;
+}
+
 void CopiarVariable(std::string& lexema, AnalizadorLexico::TablaSimbolos& ts){
 	
 }
@@ -104,6 +108,6 @@ void Escribir(std::string& cadena, Sintesis::ListaOperadoresOperando& lista){
 	std::cout << cadena << valor << std::endl;
 }
 
-void RaizCuadrada(double* a, double* res){
-	*res = sqrt(*a);
+void RaizCuadrada(double* fuente, double* destino){
+	*destino = sqrt(*fuente);
 }

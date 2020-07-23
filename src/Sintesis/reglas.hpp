@@ -23,6 +23,8 @@ using Complex=AnalizadorLexico::ComponenteLexico;
 
 void AsignarReal(std::string& lexema, AnalizadorLexico::TablaSimbolos& ts);
 
+void CopiarValorDeHijo(double* destino, double* fuente);
+
 void CopiarVariable(std::string& lexema, AnalizadorLexico::TablaSimbolos& ts);
 
 void CambiarValorVariable(std::string& lexema, Sintesis::ListaOperadoresOperando& lista, AnalizadorLexico::TablaSimbolos& ts);
@@ -37,4 +39,4 @@ void ResolverCondicional(Sintesis::ListaOperadoresOperando* listaOpAi, Complex& 
 
 void Escribir(std::string& cadena, Sintesis::ListaOperadoresOperando& lista);
 
-void RaizCuadrada(double* a, double* res);
+void RaizCuadrada(double* fuente, double* destino);

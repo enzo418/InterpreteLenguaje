@@ -30,7 +30,7 @@ AnalizadorLexico::ElementoTabla* ObtenerElementoTabla(AnalizadorLexico::TablaSim
 
 
 Complex StringAComplex(std::string X){
-	Complex c = Complex::Id;
+	Complex c = Complex::ErrorLexico;
 	if(X == "=")
 		c=Complex::Igual;
 	else if(X == "==")
@@ -81,15 +81,15 @@ Complex StringAComplex(std::string X){
 		c=Complex::Cadena;
 	else if(X == "oprel")
 		c=Complex::OpRel;
-	else if(X == "menor")
+	else if(X == "<")
 		c=Complex::Menor;
-	else if(X == "mayor")
+	else if(X == ">")
 		c=Complex::Mayor;
-	else if(X == "diferente")
+	else if(X == "<>")
 		c=Complex::Diferente;
-	else if(X == "menorigual")
+	else if(X == "<=")
 		c=Complex::MenorIgual;
-	else if(X == "mayorigual")
+	else if(X == ">=")
 		c=Complex::MayorIgual;
 	else if (X == "opRel")
 		c = Complex::OpRel;
