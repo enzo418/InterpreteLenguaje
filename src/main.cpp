@@ -139,6 +139,7 @@ int main(){
         {{"<Sent>", "id"}, "CambiarValorVariable"},
         {{"<Sent>", "leer"}, "Leer"},
         {{"<Sent>", "escribir"}, "Escribir"},
+		{{"<Sent>", "si"}, "ResolverSi"},
 
         {{"<Condiciones>", "<OpAritmeticas>"}, "ResolverCondicional"},
 
@@ -151,10 +152,10 @@ int main(){
         {{"<T>", "^"}, "GuardarOperadorYCopiarListaOpA"},
         //{{"<T>", "epsilon"}, "GuardarOperadorYCopiarListaOpA"},
 
-        {{"<IdConst>", "id"}, "CopiarValorDeHijo"},
+        {{"<IdConst>", "id"}, "CopiarValorDeId"},
         {{"<IdConst>", "constante"}, "CopiarValorDeHijo"},
-        {{"<IdConst>", "("}, "CopiarValorDeHijo"},
-        {{"<IdConst>", "rcd"}, "RaizCuadrada"},
+        {{"<IdConst>", "("}, "AgregarParentesisExtremosYCopiarLista"},
+        {{"<IdConst>", "rcd"}, "ResolverListaYCalcularRaizCuadrada"},
     };
     
     //DDS(ts, arbol, tablaVars);

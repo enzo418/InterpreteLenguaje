@@ -20,7 +20,7 @@ namespace AnalizadorSintactico{
 		// la iniciamos con nullptr asi no le asigna una direccion cualquiera
 		double* valor = nullptr; 
 
-		const char* lexema;
+		std::string lexema;
 
 		Sintesis::ListaOperadoresOperando* listaOO = nullptr;
 		

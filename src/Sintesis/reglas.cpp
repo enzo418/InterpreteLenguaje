@@ -48,10 +48,10 @@ void AgregarParentesisExtremosYCopiarLista(Sintesis::ListaOperadoresOperando* li
 	destino = listaOpa;
 }
 
-void CambiarValorVariable(std::string& lexema, Sintesis::ListaOperadoresOperando& lista, AnalizadorLexico::TablaSimbolos& ts){	
+void CambiarValorVariable(std::string& lexema, Sintesis::ListaOperadoresOperando* lista, AnalizadorLexico::TablaSimbolos& ts){	
 	AnalizadorLexico::ElementoTabla* elemento = ObtenerElementoTabla(ts, lexema);
 	if(elemento && elemento->complex == Complex::Id){
-		*elemento->valor = CalcularValorLista(lista.operadores, lista.operandos);
+		*elemento->valor = CalcularValorLista(lista->operadores, lista->operandos);
 	} // else... manejar error de identificador no válido.
 }
 
@@ -105,7 +105,9 @@ void GuardarOperadorYCopiarListaOpA(Complex& operador, Sintesis::ListaOperadores
 	listaT = listaOpA;
 }
 
-void ResolverCondicional(Sintesis::ListaOperadoresOperando* listaOpAi, Complex& operador, Sintesis::ListaOperadoresOperando* listaOpAd, bool& res){
+bool ResolverCondicional(Sintesis::ListaOperadoresOperando* listaOpAi, Complex& operador, Sintesis::ListaOperadoresOperando* listaOpAd){
+	bool res = false;
+	
 	// inicializamos valor en 0
 	double valori = 0;
 	// calculamos su valor en base a la lista
@@ -135,11 +137,13 @@ void ResolverCondicional(Sintesis::ListaOperadoresOperando* listaOpAi, Complex& 
 			res = valori <= valord;
 			break;
 	}
+	
+	return res;
 }
 
-void Escribir(std::string& cadena, Sintesis::ListaOperadoresOperando& lista){
+void Escribir(std::string& cadena, Sintesis::ListaOperadoresOperando* lista){
 	// inicializamos valor en 0
-	double valor = CalcularValorLista(lista.operadores, lista.operandos);
+	double valor = CalcularValorLista(lista->operadores, lista->operandos);
 
 	// imprimimos en pantalla la cadena seguida de el valor
 	std::cout << cadena << valor << std::endl;

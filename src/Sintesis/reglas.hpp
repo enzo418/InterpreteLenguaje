@@ -31,7 +31,7 @@ void CopiarVariable(std::string& lexema, AnalizadorLexico::TablaSimbolos& ts);
 
 void AgregarParentesisExtremosYCopiarLista(Sintesis::ListaOperadoresOperando* listaOpa, Sintesis::ListaOperadoresOperando* destino);
 
-void CambiarValorVariable(std::string& lexema, Sintesis::ListaOperadoresOperando& lista, AnalizadorLexico::TablaSimbolos& ts);
+void CambiarValorVariable(std::string& lexema, Sintesis::ListaOperadoresOperando* lista, AnalizadorLexico::TablaSimbolos& ts);
 
 void ResolverListaYCalcularRaizCuadrada(Sintesis::ListaOperadoresOperando& lista, double* destino);
 
@@ -43,8 +43,8 @@ void GuardarValorYCopiarListaIdConstyT(double& valor, Sintesis::ListaOperadoresO
 
 void GuardarOperadorYCopiarListaOpA(Complex& operador, Sintesis::ListaOperadoresOperando* listaOpA, Sintesis::ListaOperadoresOperando* listaT);
 
-void ResolverCondicional(Sintesis::ListaOperadoresOperando* listaOpAi, Complex& operador, Sintesis::ListaOperadoresOperando* listaOpAd, bool& res);
+bool ResolverCondicional(Sintesis::ListaOperadoresOperando* listaOpAi, Complex& operador, Sintesis::ListaOperadoresOperando* listaOpAd);
 
-void Escribir(std::string& cadena, Sintesis::ListaOperadoresOperando& lista);
+void Escribir(std::string& cadena, Sintesis::ListaOperadoresOperando* lista);
 
 void RaizCuadrada(double* fuente, double* destino);
