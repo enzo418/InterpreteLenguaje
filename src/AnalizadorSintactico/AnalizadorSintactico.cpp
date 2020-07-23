@@ -37,8 +37,8 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 	// Declararamos las variables que necesita analizador lexico
 	std::ifstream fuente;
 
-	if(!AbrirArchivo(fuente, "input.txt")){
-		if (!AbrirArchivo(fuente, "/input.txt")) {
+	if(!AbrirArchivo(fuente, "entrada.txt")){
+		if (!AbrirArchivo(fuente, "/entrada.txt")) {
 			std::cout << "El archivo no existe" << std::endl;
 			delete arbol;
 			return 0;

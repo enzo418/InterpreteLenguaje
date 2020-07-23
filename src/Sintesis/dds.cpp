@@ -7,8 +7,7 @@
 using Nodo = AnalizadorSintactico::Nodo;
 
 // --
-
-void RecorrerArbolAplicandoReglas(Nodo* raiz, Sintesis::ListaVarReglas &reglas, AnalizadorLexico::TablaSimbolos& ts, Nodo* padre);
+void RecorrerArbolAplicandoReglas(Nodo* raiz, Sintesis::ListaVarReglas &reglas, AnalizadorLexico::TablaSimbolos& ts, Nodo* padre = nullptr);
 
 void EjecutarReglas(Nodo* raiz, Sintesis::ListaVarReglas &reglas, AnalizadorLexico::TablaSimbolos& ts);
 
@@ -18,17 +17,10 @@ void EjectuarMientras(Nodo* raizCondiciones, Nodo* raizCuerpo, Sintesis::ListaVa
 // --
 
 void DDS(AnalizadorLexico::TablaSimbolos& ts, Nodo* arbol, Sintesis::ListaVarReglas &reglas){
-	//RecorrerArbolAplicandoReglas(arbol, reglas);
-
-	// Para saber que regla semantica aplicar luego de pasar por los mas de un hijo en un nodo X
-	// obtener el primer hijo N y buscar en la lista por una produccion que sea producida por X y empieze con N.
-	// esto basado en que la gramatica es LL(1) por lo que cada produccion empieza diferente y con solo saber el 
-	// primer simbolo ya podemos saber a que produccion ir.
-
-	// luego de esto buscamos en la lista de variables por una que sea Padre(X) y produzca X (Padre(X)  -> X)
+	RecorrerArbolAplicandoReglas(arbol, reglas, ts);
 }
 
-void RecorrerArbolAplicandoReglas(Nodo* raiz, Sintesis::ListaVarReglas &reglas, AnalizadorLexico::TablaSimbolos& ts, Nodo* padre = nullptr){
+void RecorrerArbolAplicandoReglas(Nodo* raiz, Sintesis::ListaVarReglas &reglas, AnalizadorLexico::TablaSimbolos& ts, Nodo* padre){
 	/* Nota:
 		Seria ideal una implementacion no recursiva de este metodo, ya que para arboles muy largos
 		seguramente cause stack overflow.
