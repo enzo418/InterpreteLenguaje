@@ -105,12 +105,6 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 
 					nodo->complex = StringAComplex(produccion[i]);
 
-					if(complex == Complex::Id && strcmp(produccion[i], "id")){
-						nodo->lexema = lexema.c_str();
-					}else if(complex == Complex::Constante && strcmp(produccion[i], "constante")){
-						nodo->valor = new double(std::stod(lexema.c_str()));
-					}
-
 					// Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
 					if(!EsVariable(produccion[i])) 
 						nodo = nullptr;
@@ -128,16 +122,15 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 						<< "X = " << X 
 						<< " | lexema = " << lexema 
 						<< " | igual? " << (StringAComplex(X) == complex ? "si" : "no") << std::endl;
+
 			if(StringAComplex(X) == complex){
 				if(strcmp(X, "$") == 0){
 					exito = true;
 				}
 
 				// si no se pudo obtener el siguiente complex significa que llegamos al final del archivo
-				if (!ObtenerSiguienteComplex(fuente, control, complex, lexema, ts)) {
-					lexema = "$";
-					complex = AnalizadorLexico::ComponenteLexico::FDA;
-				}
+				ObtenerSiguienteComplex(fuente, control, complex, lexema, ts);
+
 				std::cout 	<< "\nObterner nuevo Complex: \n\t"
 							<< "lexema = " << lexema 
 							<< " | control = " << control << std::endl;

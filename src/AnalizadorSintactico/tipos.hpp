@@ -17,23 +17,10 @@ namespace AnalizadorSintactico{
 
 		AnalizadorLexico::ComponenteLexico complex;
 
-		// la iniciamos con nullptr asi no le asigna una direccion cualquiera
-		double* valor = nullptr; 
-
 		std::string lexema;
-
-		Sintesis::ListaOperadoresOperando* listaOO = nullptr;
 		
 		// inicializador
 		Nodo(const char* cont): contenido(cont){}
-
-		~Nodo(){
-			if(valor)
-			 	delete valor;
-			
-			if(listaOO)
-				delete listaOO;			
-		}
 	};
 	
 	struct comparador{

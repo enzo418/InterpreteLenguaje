@@ -19,7 +19,12 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 		control++;
 	}
 	 
-	if (fuente.eof()) return false; // Se termino el archivo... volver.
+	// Si se termino el archivo
+	if (fuente.eof()){
+		lexema = "$";
+		complex = ComponenteLexico::FDA;
+		return false;
+	}
 
     // obtener posicion actual del control
 	control = fuente.tellg();
@@ -35,17 +40,6 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	} else if (EsConstanteEntera(fuente, control, lexema)) {
 		complex = ComponenteLexico::Constante;
 	} else if (EsOperadorRelacional(fuente, control, lexema)) {
-		/*if(lexema == "==")
-			complex = ComponenteLexico::DobleIgual;
-		else if(lexema == "<")
-			complex = ComponenteLexico::Menor;
-		else if(lexema == ">")
-			complex = ComponenteLexico::Mayor;
-		else if(lexema == "<=")
-			complex = ComponenteLexico::MenorIgual;
-		else if(lexema == ">=")
-			complex = ComponenteLexico::MayorIgual;
-		else*/
 			complex = ComponenteLexico::OpRel;
 	} else if (EsCadena(fuente, control, lexema)){
 		complex = ComponenteLexico::Cadena;
@@ -55,8 +49,4 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	}
 
 	return true;
-}
-
-void CargarTablaSimbolos(TablaSimbolos& tabla, TablaSimbolos contenido){
-
 }

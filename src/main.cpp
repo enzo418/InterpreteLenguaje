@@ -158,7 +158,7 @@ int main(){
         {{"<IdConst>", "rcd"}, "ResolverListaYCalcularRaizCuadrada"},
     };
     
-    DDS(ts, arbol, tablaVars);
+    //DDS(ts, arbol, tablaVars);
 
 	LimpiarArbol(arbol);
     
