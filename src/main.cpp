@@ -21,64 +21,117 @@ int main(int cant_args, char* args[]){
 		std::cout << "El archivo no existe" << std::endl;
 		return 0;
 	}
-    
+	
 	AnalizadorSintactico::TAS tas = 
 	{
-        //    Variable          	Token     									Produccion
-        {	{"<Programa>",        Complex::Var},					{"var", "<Variables>", "{", "<Cuerpo>", "}"} },
-        {	{"<Variables>",       Complex::Id},						{"id", "<IdVar>"} },
-        { 	{"<IdVar>",           Complex::LlavesA},				{"epsilon"} },
-        { 	{"<IdVar>",           Complex::Coma},					{",", "id", "<IdVar>"} },
-        { 	{"<IdVar>",           Complex::ParentesisC},			{"epsilon"} },
-        { 	{"<Cuerpo>",          Complex::LlavesC},				{"epsilon"} },
-        { 	{"<Cuerpo>",          Complex::Id},						{"<Sent>", "<Cuerpo>"} },
-        { 	{"<Cuerpo>",          Complex::Leer},					{"<Sent>", "<Cuerpo>"} },
-        {	{"<Cuerpo>",          Complex::Escribir},				{"<Sent>", "<Cuerpo>"} },
-        { 	{"<Cuerpo>",          Complex::Si},						{"<Sent>", "<Cuerpo>"} },
-        { 	{"<Cuerpo>",          Complex::Mientras},				{"<Sent>", "<Cuerpo>"} },
-        { 	{"<Sent>",            Complex::Id},						{"id", "=", "<OpAritmeticas>"} },
-        { 	{"<Sent>",            Complex::Leer},					{"leer","(", "cadena", ",", "<OpAritmeticas>",")"} },
-        { 	{"<Sent>",            Complex::Escribir},				{"escribir", "(", "cadena", ",", "<OpAritmeticas>", ")"} },
-        { 	{"<Sent>",            Complex::Si},						{"si", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}", "<Sino>"} },
-        { 	{"<Sent>",            Complex::Mientras},				{"mientras", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}"} },                 
-        { 	{"<Condiciones>",     Complex::RaizCuadrada},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-        { 	{"<Condiciones>",     Complex::Id},						{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-        { 	{"<Condiciones>",     Complex::Constante},				{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-     // { 	{"<Condiciones>",     Complex::ParentesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>", "<A>"} },
-        { 	{"<Condiciones>",     Complex::ParentesisA},			{"(", "<Condiciones>", ")", "<A>"} },
-        { 	{"<A>",               Complex::And},					{"and", "<Condiciones>"} },
-        { 	{"<A>",               Complex::Or},						{"or", "<Condiciones>"} },
-        { 	{"<A>",               Complex::ParentesisC},			{"epsilon"} },     
-        { 	{"<Sino>",            Complex::LlavesC},				{"epsilon"} },
-        { 	{"<Sino>",            Complex::Id},						{"epsilon"} },
-        { 	{"<Sino>",            Complex::Leer},					{"epsilon"} },
-        { 	{"<Sino>",            Complex::Escribir},				{"epsilon"} },
-        { 	{"<Sino>",            Complex::Sino},					{"sino", "{", "<Cuerpo>", "}"} },
-        { 	{"<Sino>",            Complex::Si},						{"epsilon"} },
-        { 	{"<Sino>",            Complex::Mientras},				{"epsilon"} },
-        { 	{"<OpAritmeticas>",   Complex::RaizCuadrada},			{"<IdConst>", "<T>"} },
-        { 	{"<OpAritmeticas>",   Complex::Id},						{"<IdConst>", "<T>"} },
-        { 	{"<OpAritmeticas>",   Complex::Constante},				{"<IdConst>", "<T>"} },
-        { 	{"<OpAritmeticas>",   Complex::ParentesisA},			{"<IdConst>", "<T>"} },
-        { 	{"<T>",               Complex::Mas},					{"+", "<OpAritmeticas>"} },
-        { 	{"<T>",               Complex::Menos},					{"-", "<OpAritmeticas>"} },
-        { 	{"<T>",               Complex::Division},				{"/", "<OpAritmeticas>"} },
-        { 	{"<T>",               Complex::Multiplicacion},			{"*", "<OpAritmeticas>"} },
-        { 	{"<T>",               Complex::LlavesC},				{"epsilon"} },
-        { 	{"<T>",               Complex::Potencia},				{"^","<OpAritmeticas>"} },
-        { 	{"<T>",               Complex::And},					{"epsilon"} },
-        { 	{"<T>",               Complex::Or},						{"epsilon"} },
-        { 	{"<T>",               Complex::Id},						{"epsilon"} },
-        { 	{"<T>",               Complex::OpRel},					{"epsilon"} },
-        { 	{"<T>",               Complex::Leer},					{"epsilon"} },
-        { 	{"<T>",               Complex::Escribir},				{"epsilon"} },
-        { 	{"<T>",               Complex::Si},						{"epsilon"} },
-        { 	{"<T>",               Complex::Mientras},				{"epsilon"} },
-        { 	{"<T>",               Complex::ParentesisC},			{"epsilon"} },
-        { 	{"<IdConst>",         Complex::RaizCuadrada},			{"rcd", "(", "<OpAritmeticas>", ")"} },
-        { 	{"<IdConst>",         Complex::Id},						{"id"} },
-        { 	{"<IdConst>",         Complex::Constante},				{"constante"} },
-        { 	{"<IdConst>",         Complex::ParentesisA},			{"(", "<OpAritmeticas>", ")"} }
+		//    Variable          	Token     									Produccion
+		{	{"<Programa>",        Complex::Var},					{"var", "<Variables>", "{", "<Cuerpo>", "}"} },
+		{	{"<Variables>",       Complex::Id},						{"id", "<IdVar>"} },
+		
+		{ 	{"<IdVar>",           Complex::LlavesA},				{"epsilon"} },
+		{ 	{"<IdVar>",           Complex::Coma},					{",", "id", "<IdVar>"} },
+		{ 	{"<IdVar>",           Complex::ParentesisC},			{"epsilon"} },
+		
+		{ 	{"<Cuerpo>",          Complex::LlavesC},				{"epsilon"} },
+		{ 	{"<Cuerpo>",          Complex::Id},						{"<Sent>", "<Cuerpo>"} },
+		{ 	{"<Cuerpo>",          Complex::Leer},					{"<Sent>", "<Cuerpo>"} },
+		{	{"<Cuerpo>",          Complex::Escribir},				{"<Sent>", "<Cuerpo>"} },
+		{ 	{"<Cuerpo>",          Complex::Si},						{"<Sent>", "<Cuerpo>"} },
+		{ 	{"<Cuerpo>",          Complex::Mientras},				{"<Sent>", "<Cuerpo>"} },
+		
+		{ 	{"<Sent>",            Complex::Id},						{"id", "=", "<OpAritmeticas>"} },
+		{ 	{"<Sent>",            Complex::Leer},					{"leer","(", "cadena", ",", "id",")"} },
+		{ 	{"<Sent>",            Complex::Escribir},				{"escribir", "(", "cadena", ",", "<OpAritmeticas>", ")"} },
+		{ 	{"<Sent>",            Complex::Si},						{"si", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}", "<Sino>"} },
+		{ 	{"<Sent>",            Complex::Mientras},				{"mientras", "(", "<Condiciones>", ")", "{", "<Cuerpo>", "}"} }, 
+		
+		{	{"<Condiciones>",     Complex::Menos},					{"<Cond3>", "<B>", "<A>"} },                
+		{ 	{"<Condiciones>",     Complex::RaizCuadrada},			{"<Cond3>", "<B>", "<A>"} },
+		{ 	{"<Condiciones>",     Complex::Id},						{"<Cond3>", "<B>", "<A>"} },
+		{ 	{"<Condiciones>",     Complex::Constante},				{"<Cond3>", "<B>", "<A>"} },
+		{ 	{"<Condiciones>",     Complex::ParentesisA},			{"<Cond3>", "<B>", "<A>"} },
+		{ 	{"<Condiciones>",     Complex::CorcheteA},				{"<Cond3>", "<B>", "<A>"} },
+		{ 	{"<Condiciones>",     Complex::Not},					{"<Cond3>", "<B>", "<A>"} },
+
+		{ 	{"<A>",               Complex::And},					{"and", "<Condiciones>"} },
+		{ 	{"<A>",               Complex::Or},						{"or", "<Condiciones>"} },
+		{ 	{"<A>",               Complex::ParentesisC},			{"epsilon"} },   
+		{ 	{"<A>",               Complex::CorcheteC},				{"epsilon"} }, 
+
+		{ 	{"<B>",               Complex::And},					{"and", "<Cond3>", "<B>"} },
+		{ 	{"<B>",               Complex::Or},						{"epsilon"} },
+		{ 	{"<B>",               Complex::ParentesisC},			{"epsilon"} },
+		{ 	{"<B>",               Complex::CorcheteC},				{"epsilon"} },
+
+		{ 	{"<Cond3>",           Complex::Menos},					{"<OpAritmeticas>", "opRel", "<OpAritmeticas>"} },
+		{ 	{"<Cond3>",           Complex::RaizCuadrada},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>"} },
+		{ 	{"<Cond3>",           Complex::Id},						{"<OpAritmeticas>", "opRel", "<OpAritmeticas>"} },
+		{ 	{"<Cond3>",           Complex::Constante},				{"<OpAritmeticas>", "opRel", "<OpAritmeticas>"} },
+		{ 	{"<Cond3>",           Complex::ParentesisA},			{"<OpAritmeticas>", "opRel", "<OpAritmeticas>"} },
+		{ 	{"<Cond3>",           Complex::CorcheteA},				{"[", "<Condiciones>", "]"} },
+
+		{ 	{"<Sino>",            Complex::LlavesC},				{"epsilon"} },
+		{ 	{"<Sino>",            Complex::Id},						{"epsilon"} },
+		{ 	{"<Sino>",            Complex::Leer},					{"epsilon"} },
+		{ 	{"<Sino>",            Complex::Escribir},				{"epsilon"} },
+		{ 	{"<Sino>",            Complex::Sino},					{"sino", "{", "<Cuerpo>", "}"} },
+		{ 	{"<Sino>",            Complex::Si},						{"epsilon"} },
+		{ 	{"<Sino>",            Complex::Mientras},				{"epsilon"} },
+
+		{ 	{"<OpAritmeticas>",		Complex::Menos},				{"<T>", "<W>"} },
+		{ 	{"<OpAritmeticas>", 	Complex::RaizCuadrada},			{"<T>", "<W>"} },
+		{ 	{"<OpAritmeticas>",		Complex::Id},					{"<T>", "<W>"} },
+		{ 	{"<OpAritmeticas>",		Complex::Constante},			{"<T>", "<W>"} },
+		{ 	{"<OpAritmeticas>",		Complex::ParentesisA},			{"<T>", "<W>"} },
+
+		{ 	{"<W>",					Complex::Mas},					{"+", "<T>", "<W>"} },
+		{ 	{"<W>",   				Complex::Menos},				{"-", "<T>", "<W>"} },
+		{ 	{"<W>",   				Complex::LlavesC},				{"epsilon"} },
+		{ 	{"<W>",   				Complex::And},					{"epsilon"} },
+		{ 	{"<W>",   				Complex::Or},					{"epsilon"} },
+		{ 	{"<W>",   				Complex::OpRel},				{"epsilon"} },
+		{ 	{"<W>",   				Complex::ParentesisC},			{"epsilon"} },
+		{ 	{"<W>",   				Complex::CorcheteC},			{"epsilon"} },
+
+		{ 	{"<T>",               Complex::Menos},					{"<F>", "<Z>"} },
+		{ 	{"<T>",               Complex::RaizCuadrada},			{"<F>", "<Z>"} },
+		{ 	{"<T>",               Complex::Id},						{"<F>", "<Z>"} },
+		{ 	{"<T>",               Complex::Constante},				{"<F>", "<Z>"} },
+		{ 	{"<T>",               Complex::ParentesisA},			{"<F>", "<Z>"} },
+		
+		{ 	{"<Z>",               Complex::Mas},					{"epsilon"} },
+		{ 	{"<Z>",               Complex::Menos},					{"epsilon"} },
+		{ 	{"<Z>",               Complex::Division},				{"/", "<F>", "<Z>"} },
+		{ 	{"<Z>",               Complex::Multiplicacion},			{"*", "<F>", "<Z>"} },
+		{ 	{"<Z>",               Complex::LlavesC},				{"epsilon"} },
+		{ 	{"<Z>",               Complex::And},					{"epsilon"} },
+		{ 	{"<Z>",               Complex::Or},						{"epsilon"} },
+		{ 	{"<Z>",               Complex::OpRel},					{"epsilon"} },
+		{ 	{"<Z>",               Complex::ParentesisC},			{"epsilon"} },
+		{ 	{"<Z>",               Complex::CorcheteC},				{"epsilon"} },
+
+		{ 	{"<F>",               Complex::Menos},					{"<R>", "<X>"} },
+		{ 	{"<F>",               Complex::RaizCuadrada},			{"rcd", "(", "<OpAritmeticas>", ")", "<X>"} },
+		{ 	{"<F>",               Complex::Id},						{"<R>", "<X>"} },
+		{ 	{"<F>",               Complex::Constante},				{"<R>", "<X>"} },
+		{ 	{"<F>",               Complex::ParentesisA},			{"<R>", "<X>"} },
+
+		{ 	{"<X>",               Complex::Mas},					{"epsilon"} },
+		{ 	{"<X>",               Complex::Menos},					{"epsilon"} },
+		{ 	{"<X>",               Complex::Division},				{"epsilon"} },
+		{ 	{"<X>",               Complex::Multiplicacion},			{"epsilon"} },
+		{ 	{"<X>",               Complex::LlavesC},				{"epsilon"} },
+		{ 	{"<X>",               Complex::Potencia},				{"^", "<R>", "<X>"} },
+		{ 	{"<X>",               Complex::And},					{"epsilon"} },
+		{ 	{"<X>",               Complex::Or},						{"epsilon"} },
+		{ 	{"<X>",               Complex::OpRel},					{"epsilon"} },
+		{ 	{"<X>",               Complex::ParentesisC},			{"epsilon"} },
+		{ 	{"<X>",               Complex::CorcheteC},				{"epsilon"} },
+
+		{ 	{"<R>",         	Complex::Menos},					{"-", "<R>"} },
+		{ 	{"<R>",         	Complex::Id},						{"id"} },
+		{ 	{"<R>",         	Complex::Constante},				{"constante"} },
+		{ 	{"<R>",         	Complex::ParentesisA},				{"(", "<OpAritmeticas>", ")"} },
 	};
    
 	// iniciamos la tabla con las palabras reservadas
@@ -96,42 +149,42 @@ int main(int cant_args, char* args[]){
 
 	const char* SimboloInicial = "<Programa>";
 
-    AnalizadorSintactico::Nodo* arbol = new AnalizadorSintactico::Nodo(SimboloInicial);
+	AnalizadorSintactico::Nodo* arbol = new AnalizadorSintactico::Nodo(SimboloInicial);
 
-    int codigo = ObtenerArbolDerivacion(fuente, arbol, std::ref(tas), std::ref(ts), SimboloInicial);
-    
-    ArbolAArchivo(arbol);
-    
-    Sintesis::ListaVarReglas tablaVars = {
-        {{"<Variables>", "id"}, "AsignarReal"},
+	int codigo = ObtenerArbolDerivacion(fuente, arbol, std::ref(tas), std::ref(ts), SimboloInicial);
+	
+	ArbolAArchivo(arbol);
+	
+	Sintesis::ListaVarReglas tablaVars = {
+		{{"<Variables>", "id"}, "AsignarReal"},
 
 		{{"<IdVar>", ","}, "AsignarReal"},
 
-        {{"<Sent>", "id"}, "CambiarValorVariable"},
-        {{"<Sent>", "leer"}, "Leer"},
-        {{"<Sent>", "escribir"}, "Escribir"},
+		{{"<Sent>", "id"}, "CambiarValorVariable"},
+		{{"<Sent>", "leer"}, "Leer"},
+		{{"<Sent>", "escribir"}, "Escribir"},
 		{{"<Sent>", "si"}, "ResolverSi"},
 
-        {{"<Condiciones>", "<OpAritmeticas>"}, "ResolverCondicional"},
+		{{"<Condiciones>", "<OpAritmeticas>"}, "ResolverCondicional"},
 
-        {{"<OpAritmeticas>", "<IdConst>"}, "GuardarValorYCopiarListaT"},
-        
-        {{"<T>", "+"}, "GuardarOperadorYCopiarListaOpA"},
-        {{"<T>", "-"}, "GuardarOperadorYCopiarListaOpA"},
-        {{"<T>", "*"}, "GuardarOperadorYCopiarListaOpA"},
-        {{"<T>", "/"}, "GuardarOperadorYCopiarListaOpA"},
-        {{"<T>", "^"}, "GuardarOperadorYCopiarListaOpA"},
-        //{{"<T>", "epsilon"}, "GuardarOperadorYCopiarListaOpA"},
+		{{"<OpAritmeticas>", "<IdConst>"}, "GuardarValorYCopiarListaT"},
+		
+		{{"<T>", "+"}, "GuardarOperadorYCopiarListaOpA"},
+		{{"<T>", "-"}, "GuardarOperadorYCopiarListaOpA"},
+		{{"<T>", "*"}, "GuardarOperadorYCopiarListaOpA"},
+		{{"<T>", "/"}, "GuardarOperadorYCopiarListaOpA"},
+		{{"<T>", "^"}, "GuardarOperadorYCopiarListaOpA"},
+		//{{"<T>", "epsilon"}, "GuardarOperadorYCopiarListaOpA"},
 
-        {{"<IdConst>", "id"}, "CopiarValorDeId"},
-        {{"<IdConst>", "constante"}, "CopiarValorDeHijo"},
-        {{"<IdConst>", "("}, "AgregarParentesisExtremosYCopiarLista"},
-        {{"<IdConst>", "rcd"}, "ResolverListaYCalcularRaizCuadrada"},
-    };
-    
-    //DDS(ts, arbol, tablaVars);
+		{{"<IdConst>", "id"}, "CopiarValorDeId"},
+		{{"<IdConst>", "constante"}, "CopiarValorDeHijo"},
+		{{"<IdConst>", "("}, "AgregarParentesisExtremosYCopiarLista"},
+		{{"<IdConst>", "rcd"}, "ResolverListaYCalcularRaizCuadrada"},
+	};
+	
+	//DDS(ts, arbol, tablaVars);
 
 	LimpiarArbol(arbol);
-    
-    return 0;
+	
+	return 0;
 }
