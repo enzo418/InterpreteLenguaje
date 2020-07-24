@@ -80,8 +80,6 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 					// Crear nodo hijo de X en el arbol
 					Nodo* nodo = new Nodo(produccion[i]);
 					raiz->hijos.push_back(nodo);
-
-					nodo->complex = StringAComplex(produccion[i]);
 					
 					// Si es epsilon va en el arbol pero no en la pila de simbolos.
 					if(strcmp(produccion[i], "epsilon") != 0)
