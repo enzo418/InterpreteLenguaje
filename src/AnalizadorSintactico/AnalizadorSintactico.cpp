@@ -47,15 +47,6 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 
 	// bucle principal del analizador sintactico
 	while (!exito && !error) {      
-		
-		// No deberia ser necesario comprobar esto, ya que el ultimo caracter es $ y deberia parar antes
-		// pero lo voy a dejar hasta que se terminen de completar todos los automatas
-		if (pilaSimbolos.size() == 0) {
-			std::cout << "Evitada excepcion al intentar desapilar de la pila simbolos vacia. Saliendo." << std::endl;
-			error = true;
-			break;
-		}
-
 		// Obtener X
 		std::pair<const char*, Nodo*> par = pilaSimbolos.top();
 		const char* X = par.first;
