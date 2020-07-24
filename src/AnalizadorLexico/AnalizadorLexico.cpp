@@ -40,7 +40,7 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	} else if (EsConstanteEntera(fuente, control, lexema)) {
 		complex = ComponenteLexico::Constante;
 	} else if (EsOperadorRelacional(fuente, control, lexema)) {
-			complex = ComponenteLexico::OpRel;
+		complex = ComponenteLexico::OpRel;
 	} else if (EsCadena(fuente, control, lexema)){
 		complex = ComponenteLexico::Cadena;
 	} else if (!EsSimboloEspecial(fuente, control, lexema, complex)) {

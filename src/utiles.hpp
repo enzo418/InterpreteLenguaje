@@ -1,13 +1,12 @@
+#pragma once
+
 #include <iostream>
 #include <fstream>
 
-bool AbrirArchivo(std::ifstream& fuente, const char* archivo){
-    // Abrimos el archivo con permisos de lectura
-    fuente.open(archivo);
+bool AbrirArchivo(std::ifstream& fuente, std::string archivo);
 
-    if(!fuente.good()){ // si no se pudo abrir
-        return false;         
-    }
-    
-    return true;
-}
+void LeerArgumentos(int cant_args, char* args[], std::string& archivoFuente);
+
+void RaizAString(AnalizadorSintactico::Nodo* raiz, std::string& texto);
+
+void ArbolAArchivo(AnalizadorSintactico::Nodo* arbol);

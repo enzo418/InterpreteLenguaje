@@ -5,6 +5,7 @@
 void LimpiarArbol(AnalizadorSintactico::Nodo* raiz, 
 					AnalizadorSintactico::Nodo* padre = nullptr);
 
-int ObtenerArbolDerivacion(AnalizadorSintactico::Nodo* arbol, 
+int ObtenerArbolDerivacion(std::ifstream& fuente,
+							AnalizadorSintactico::Nodo* arbol, 
 							AnalizadorSintactico::TAS& tas, AnalizadorLexico::TablaSimbolos& ts,
 							const char* SimboloInicial);

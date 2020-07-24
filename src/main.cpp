@@ -1,55 +1,26 @@
 #include <iostream>
 #include <functional>           // std::ref
 
-#include <sstream>
 #include <fstream>
 
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
 #include "Sintesis/dds.hpp"
 
+#include "utiles.hpp"
+
 using Complex=AnalizadorLexico::ComponenteLexico;
 
-void RaizAString(AnalizadorSintactico::Nodo* raiz, std::string& texto){
-	std::ostringstream dirraiz;
-	dirraiz << (void const *)raiz;
+int main(int cant_args, char* args[]){	
+	std::string archivoFuente;
 
-	texto += dirraiz.str() + "_" + raiz->contenido + ":";
+	LeerArgumentos(cant_args, args, archivoFuente);
 
-	// agregar todos los hijos a la cadena separados por $
-	size_t sz = raiz->hijos.size(); 
-    // apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
-    for(int i = sz-1; i >= 0; i--) {
-        std::ostringstream dirhijo;
-	    dirhijo << (void const *)raiz->hijos[i];
-		texto += "[" + dirhijo.str() +"_"+ raiz->hijos[i]->contenido + "]$";
+	std::ifstream fuente;
+
+	if(!AbrirArchivo(fuente, archivoFuente)){
+		std::cout << "El archivo no existe" << std::endl;
+		return 0;
 	}
-
-    if(sz > 0)
-        // remplezar el ultimo $ con \n
-        texto[texto.length() - 1] = '\n';
-    else
-        texto += "\n";
-
-	// Para cada hijo de esta raiz hacer lo mismo
-	for(AnalizadorSintactico::Nodo* nodo: raiz->hijos){
-		RaizAString(nodo, texto);
-	}
-}
-
-void ArbolAArchivo(AnalizadorSintactico::Nodo* arbol){
-    std::ifstream archivo;
-	std::string texto = "";
-	
-	RaizAString(arbol, texto);
-
-	std::ofstream outfile ("arbol.txt");
-
-	outfile << texto << std::endl;
-
-	outfile.close();	    
-}
-
-int main(){
     
 	AnalizadorSintactico::TAS tas = 
 	{
@@ -127,7 +98,7 @@ int main(){
 
     AnalizadorSintactico::Nodo* arbol = new AnalizadorSintactico::Nodo(SimboloInicial);
 
-    int codigo = ObtenerArbolDerivacion(arbol, std::ref(tas), std::ref(ts), SimboloInicial);
+    int codigo = ObtenerArbolDerivacion(fuente, arbol, std::ref(tas), std::ref(ts), SimboloInicial);
     
     ArbolAArchivo(arbol);
     

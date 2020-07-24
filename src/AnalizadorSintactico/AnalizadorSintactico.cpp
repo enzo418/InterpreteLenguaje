@@ -3,7 +3,6 @@
 #include "AnalizadorSintactico.hpp"
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
 #include "../AnalizadorLexico/utiles.hpp"
-#include "../utiles.hpp"
 #include "../tipos.hpp"
 #include "tipos.hpp"
 #include "../Sintesis/tipos.hpp"
@@ -23,7 +22,7 @@ void LimpiarArbol(Nodo* raiz, Nodo* padre){
 	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
 }
 
-int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolos& ts, const char* SimboloInicial){
+int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolos& ts, const char* SimboloInicial){
 	Nodo* raiz = arbol;
 
 	Pila pilaSimbolos;
@@ -33,22 +32,10 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 	bool exito = false;
 	bool error = false;
 	std::string mensajeError = "";
-
-	// Declararamos las variables que necesita analizador lexico
-	std::ifstream fuente;
-
-	if(!AbrirArchivo(fuente, "entrada.txt")){
-		if (!AbrirArchivo(fuente, "/entrada.txt")) {
-			std::cout << "El archivo no existe" << std::endl;
-			delete arbol;
-			return 0;
-		}
-	}
 	
 	ulong control = 0;
 	std::string lexema = "";
 	AnalizadorLexico::ComponenteLexico complex = AnalizadorLexico::ComponenteLexico::Id;	
-
 	
 	// lista de las producciones generadas por una VariablexToken
 	Produccion produccion;
@@ -104,10 +91,6 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 					raiz->hijos.push_back(nodo);
 
 					nodo->complex = StringAComplex(produccion[i]);
-
-					// Apilar el simbolo, si no es variable quitar la referencia al nodo ya que no se va a derivar
-					if(!EsVariable(produccion[i])) 
-						nodo = nullptr;
 					
 					// Si es epsilon va en el arbol pero no en la pila de simbolos.
 					if(strcmp(produccion[i], "epsilon") != 0)
@@ -121,11 +104,17 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 			std::cout 	<< "\nTerminal: \n\t"
 						<< "X = " << X 
 						<< " | lexema = " << lexema 
-						<< " | igual? " << (StringAComplex(X) == complex ? "si" : "no") << std::endl;
+						<< " | igual? " << (StringAComplex(X) == complex ? "si" : "no") 
+						<< std::endl;
 
 			if(StringAComplex(X) == complex){
 				if(strcmp(X, "$") == 0){
 					exito = true;
+				}
+
+				if(raiz) {
+					raiz->complex = complex;
+					raiz->lexema = lexema;
 				}
 
 				// si no se pudo obtener el siguiente complex significa que llegamos al final del archivo
@@ -133,7 +122,8 @@ int ObtenerArbolDerivacion(Nodo* arbol, TAS& tas, AnalizadorLexico::TablaSimbolo
 
 				std::cout 	<< "\nObterner nuevo Complex: \n\t"
 							<< "lexema = " << lexema 
-							<< " | control = " << control << std::endl;
+							<< " | control = " << control 
+							<< std::endl;
 			}else{
 				error = true;
 				mensajeError = "Se esperaba \"" + std::string(X) + "\", se obtuvo \"" + lexema + "\"";
