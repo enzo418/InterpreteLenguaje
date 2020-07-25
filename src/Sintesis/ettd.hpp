@@ -13,7 +13,7 @@ extern bool _ERROR;
 
 void AgregarVariable(std::string lexema, Variables& variables);
 
-void EvaluarPrograma(Nodo* arbol, Variables& variables);
+void EvaluarPrograma(Nodo* arbol);
 
 void EvaluarVariables(Nodo* arbol, Variables& variables);
 

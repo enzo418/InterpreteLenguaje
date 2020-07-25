@@ -32,7 +32,8 @@ void AgregarVariable(std::string lexema, Variables& variables){
 	}
 }
 
-void EvaluarPrograma(Nodo* arbol, Variables& variables){
+void EvaluarPrograma(Nodo* arbol){
+	Variables variables;
 	EvaluarVariables(arbol->hijos[1], variables);
 	EvaluarCuerpo(arbol->hijos[3], variables);
 }
@@ -44,7 +45,7 @@ void EvaluarVariables(Nodo* arbol, Variables& variables){
 
 void EvaluarIdVar(Nodo* IdVar, Variables& variables){
 	Nodo* primerHijo = IdVar->hijos[0];
-	if(primerHijo->contenido != "epsilon"){
+	if(primerHijo->complex == Complex::Coma){
 		AgregarVariable(IdVar->hijos[1]->lexema, variables);
 		EvaluarIdVar(IdVar->hijos[2], variables);
 	}

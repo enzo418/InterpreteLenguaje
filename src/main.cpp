@@ -7,6 +7,8 @@
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
 #include "AnalizadorLexico/tipos.hpp"
 
+#include "Sintesis/ettd.hpp"
+
 using Complex=AnalizadorLexico::ComponenteLexico;
 
 bool _ERROR = false;
@@ -169,9 +171,11 @@ int main(int cant_args, char* args[]){
 
 	int codigo = ObtenerArbolDerivacion(fuente, arbol, std::ref(tas), std::ref(ts), SimboloInicial);
 	
+	EvaluarPrograma(arbol);
+
 	ArbolAArchivo(arbol);
 	
 	LimpiarArbol(arbol);
 	
-	return 0;
+	return codigo;
 }
