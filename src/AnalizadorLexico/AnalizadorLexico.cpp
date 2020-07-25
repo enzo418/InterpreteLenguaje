@@ -23,6 +23,7 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
 	if (fuente.eof()){
 		lexema = "$";
 		complex = ComponenteLexico::FDA;
+		fuente.close();
 		return false;
 	}
 

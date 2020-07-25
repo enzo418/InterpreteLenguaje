@@ -6,8 +6,6 @@
 #include <stack>
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
 
-#include "../Sintesis/tipos.hpp"
-
 namespace AnalizadorSintactico{
 	// Nodo de un arbol
 	struct Nodo {

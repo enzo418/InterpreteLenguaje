@@ -3,12 +3,13 @@
 
 #include <fstream>
 
-#include "AnalizadorSintactico/AnalizadorSintactico.hpp"
-#include "Sintesis/dds.hpp"
-
 #include "utiles.hpp"
+#include "AnalizadorSintactico/AnalizadorSintactico.hpp"
+#include "AnalizadorLexico/tipos.hpp"
 
 using Complex=AnalizadorLexico::ComponenteLexico;
+
+bool _ERROR = false;
 
 int main(int cant_args, char* args[]){	
 	std::string archivoFuente;
@@ -53,7 +54,7 @@ int main(int cant_args, char* args[]){
 		{ 	{"<Condiciones>",     Complex::CorcheteA},				{"<Cond3>", "<B>", "<A>"} },
 		{ 	{"<Condiciones>",     Complex::Not},					{"<Cond3>", "<B>", "<A>"} },
 
-		{ 	{"<A>",               Complex::And},					{"and", "<Condiciones>"} },
+		//{ 	{"<A>",               Complex::And},					{"and", "<Condiciones>"} },
 		{ 	{"<A>",               Complex::Or},						{"or", "<Condiciones>"} },
 		{ 	{"<A>",               Complex::ParentesisC},			{"epsilon"} },   
 		{ 	{"<A>",               Complex::CorcheteC},				{"epsilon"} }, 
@@ -89,7 +90,12 @@ int main(int cant_args, char* args[]){
 		{ 	{"<W>",   				Complex::LlavesC},				{"epsilon"} },
 		{ 	{"<W>",   				Complex::And},					{"epsilon"} },
 		{ 	{"<W>",   				Complex::Or},					{"epsilon"} },
+		{ 	{"<W>",   				Complex::Id},					{"epsilon"} },
 		{ 	{"<W>",   				Complex::OpRel},				{"epsilon"} },
+		{ 	{"<W>",   				Complex::Leer},					{"epsilon"} },
+		{ 	{"<W>",   				Complex::Escribir},				{"epsilon"} },
+		{ 	{"<W>",   				Complex::Si},					{"epsilon"} },
+		{ 	{"<W>",   				Complex::Mientras},				{"epsilon"} },
 		{ 	{"<W>",   				Complex::ParentesisC},			{"epsilon"} },
 		{ 	{"<W>",   				Complex::CorcheteC},			{"epsilon"} },
 
@@ -106,7 +112,12 @@ int main(int cant_args, char* args[]){
 		{ 	{"<Z>",               Complex::LlavesC},				{"epsilon"} },
 		{ 	{"<Z>",               Complex::And},					{"epsilon"} },
 		{ 	{"<Z>",               Complex::Or},						{"epsilon"} },
+		{ 	{"<Z>",               Complex::Id},						{"epsilon"} },
 		{ 	{"<Z>",               Complex::OpRel},					{"epsilon"} },
+		{ 	{"<Z>",               Complex::Leer},					{"epsilon"} },
+		{ 	{"<Z>",               Complex::Escribir},				{"epsilon"} },
+		{ 	{"<Z>",               Complex::Si},						{"epsilon"} },
+		{ 	{"<Z>",               Complex::Mientras},				{"epsilon"} },
 		{ 	{"<Z>",               Complex::ParentesisC},			{"epsilon"} },
 		{ 	{"<Z>",               Complex::CorcheteC},				{"epsilon"} },
 
@@ -124,7 +135,12 @@ int main(int cant_args, char* args[]){
 		{ 	{"<X>",               Complex::Potencia},				{"^", "<R>", "<X>"} },
 		{ 	{"<X>",               Complex::And},					{"epsilon"} },
 		{ 	{"<X>",               Complex::Or},						{"epsilon"} },
+		{ 	{"<X>",               Complex::Id},						{"epsilon"} },
 		{ 	{"<X>",               Complex::OpRel},					{"epsilon"} },
+		{ 	{"<X>",               Complex::Leer},					{"epsilon"} },
+		{ 	{"<X>",               Complex::Escribir},				{"epsilon"} },
+		{ 	{"<X>",               Complex::Si},						{"epsilon"} },
+		{ 	{"<X>",               Complex::Mientras},						{"epsilon"} },
 		{ 	{"<X>",               Complex::ParentesisC},			{"epsilon"} },
 		{ 	{"<X>",               Complex::CorcheteC},				{"epsilon"} },
 
@@ -155,35 +171,6 @@ int main(int cant_args, char* args[]){
 	
 	ArbolAArchivo(arbol);
 	
-	Sintesis::ListaVarReglas tablaVars = {
-		{{"<Variables>", "id"}, "AsignarReal"},
-
-		{{"<IdVar>", ","}, "AsignarReal"},
-
-		{{"<Sent>", "id"}, "CambiarValorVariable"},
-		{{"<Sent>", "leer"}, "Leer"},
-		{{"<Sent>", "escribir"}, "Escribir"},
-		{{"<Sent>", "si"}, "ResolverSi"},
-
-		{{"<Condiciones>", "<OpAritmeticas>"}, "ResolverCondicional"},
-
-		{{"<OpAritmeticas>", "<IdConst>"}, "GuardarValorYCopiarListaT"},
-		
-		{{"<T>", "+"}, "GuardarOperadorYCopiarListaOpA"},
-		{{"<T>", "-"}, "GuardarOperadorYCopiarListaOpA"},
-		{{"<T>", "*"}, "GuardarOperadorYCopiarListaOpA"},
-		{{"<T>", "/"}, "GuardarOperadorYCopiarListaOpA"},
-		{{"<T>", "^"}, "GuardarOperadorYCopiarListaOpA"},
-		//{{"<T>", "epsilon"}, "GuardarOperadorYCopiarListaOpA"},
-
-		{{"<IdConst>", "id"}, "CopiarValorDeId"},
-		{{"<IdConst>", "constante"}, "CopiarValorDeHijo"},
-		{{"<IdConst>", "("}, "AgregarParentesisExtremosYCopiarLista"},
-		{{"<IdConst>", "rcd"}, "ResolverListaYCalcularRaizCuadrada"},
-	};
-	
-	//DDS(ts, arbol, tablaVars);
-
 	LimpiarArbol(arbol);
 	
 	return 0;

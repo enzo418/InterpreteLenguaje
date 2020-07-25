@@ -93,6 +93,10 @@ Complex StringAComplex(std::string X){
 		c=Complex::MayorIgual;
 	else if (X == "opRel")
 		c = Complex::OpRel;
+	else if (X == "[")
+		c = Complex::CorcheteA;
+	else if (X == "]")
+		c = Complex::CorcheteC;
 	else if (X == "$")
 		c = Complex::FDA;
 	return c;

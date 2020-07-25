@@ -130,7 +130,7 @@ bool EsConstanteReal(std::ifstream& fuente, ulong& control, std::string& lexema)
 			t = Sigma::Exponente;
 		} else if (c >= '0' && c <= '9') {
 			t = Sigma::Digito;
-		} else if (c == '-' || c == '+') {
+		} else if (c == '-') {
 			t = Sigma::Signo;
 		} else if (c == '.') {
 			t = Sigma::Punto;
@@ -214,7 +214,7 @@ bool EsConstanteEntera(std::ifstream& fuente, ulong& control, std::string& lexem
 	auto CarASimbolo = [](char& c) -> Sigma {
 		Sigma t = Sigma::Otro;
 
-		if (c == '-' || c == '+') {
+		if (c == '-') {
 			t = Sigma::Signo;
 		} else if (c >= '0' && c <= '9') {
 			t = Sigma::Digito;
@@ -398,6 +398,12 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 			break;
 		case '}':
 			cl = ComponenteLexico::LlavesC;
+			break;
+		case '[':
+			cl = ComponenteLexico::CorcheteA;
+			break;
+		case ']':
+			cl = ComponenteLexico::CorcheteC;
 			break;
 		default:
 			esSimbolo = false;

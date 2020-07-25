@@ -5,7 +5,6 @@
 #include "../AnalizadorLexico/utiles.hpp"
 #include "../tipos.hpp"
 #include "tipos.hpp"
-#include "../Sintesis/tipos.hpp"
 
 using namespace AnalizadorSintactico;
 using Complex=AnalizadorLexico::ComponenteLexico;
@@ -41,7 +40,7 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 	Produccion produccion;
 
 	if (!ObtenerSiguienteComplex(fuente, control, complex, lexema, ts)) {
-		std::cout << "El archivo esta vacio" << std::endl;
+		std::cout << "El archivo esta vacio" << std::endl;	
 		return 0;
 	}
 
@@ -58,7 +57,7 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 		if(EsVariable(X)){
 			produccion = tas[{X, complex}];
 
-			std::cout << "\nVariable: \n\t"
+			std::cout << "\nDesapilada Variable: \n\t"
 				<< "X: " << X
 				<< " | lexema: " << lexema
 				<< " | producciones: ";
@@ -90,10 +89,10 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 				mensajeError = "Caracter no esperado \"" + lexema + "\" Con la variable " + std::string(X);
 			}
 		} else {	
-			std::cout 	<< "\nTerminal: \n\t"
+			std::cout 	<< "\nDesapilado Terminal: \n\t"
 						<< "X = " << X 
 						<< " | lexema = " << lexema 
-						<< " | igual? " << (StringAComplex(X) == complex ? "si" : "no") 
+						<< " | complex iguales? " << (StringAComplex(X) == complex ? "si" : "no") 
 						<< std::endl;
 
 			if(StringAComplex(X) == complex){

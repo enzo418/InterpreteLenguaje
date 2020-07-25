@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "AnalizadorSintactico/tipos.hpp"
+
 bool AbrirArchivo(std::ifstream& fuente, std::string archivo);
 
 void LeerArgumentos(int cant_args, char* args[], std::string& archivoFuente);
