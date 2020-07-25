@@ -1,6 +1,10 @@
 #include "ettd.hpp"
 #include "../AnalizadorSintactico/tipos.hpp"
 #include "tipos.hpp"
+#include "ettd.hpp"
+
+#include <string>
+#include <math.h>
 
 using Nodo=AnalizadorSintactico::Nodo;
 using Variables=Sintesis::Variables;
@@ -9,8 +13,15 @@ using Complex=AnalizadorLexico::ComponenteLexico;
 #define VariableNoExiste(var, vars) vars.find(var) == vars.end()
 #define VariableExiste(var, vars) vars.find(var) != vars.end()
 
-// decimos que _ERROR esta en otro archivo
-extern bool _ERROR;
+double ObtenerValorVariable(std::string lexema, Variables& variables){
+	if(VariableExiste(lexema, variables)){
+		return variables[lexema];
+	} else {
+		_ERROR = true;		
+		std::cout << "Error: Variable " << lexema << " ignorada, ya que ya fue declarada previamente." << std::endl;
+		return 0;
+	}
+}
 
 void AgregarVariable(std::string lexema, Variables& variables){	
 	if(VariableNoExiste(lexema, variables)){
@@ -119,14 +130,16 @@ bool EvaluarCondiciones(Nodo* Condiciones, Variables& variables){
 	bool res = EvaluarCond3(Condiciones->hijos[0], variables);
 
 	// Si B no se deriva en epsilon
-	if(Condiciones->hijos[1]->contenido != "epsilon"){
+	if(Condiciones->hijos[1]->hijos[0]->contenido != "epsilon"){
 		res &= EvaluarB(Condiciones->hijos[1], variables);
 	}
 
 	// Si A no se deriva en epsilon
-	if(Condiciones->hijos[2]->contenido != "epsilon"){
+	if(Condiciones->hijos[2]->hijos[0]->contenido != "epsilon"){
 		res |= EvaluarA(Condiciones->hijos[2], variables);
 	}
+
+	return res;
 }
 
 bool EvaluarA(Nodo* A, Variables& variables){
@@ -134,9 +147,11 @@ bool EvaluarA(Nodo* A, Variables& variables){
 }
 
 bool EvaluarB(Nodo* B, Variables& variables){
-	if(B->contenido != "epsilon"){
-		return EvaluarCond3(B->hijos[1], variables);
+	bool res = EvaluarCond3(B->hijos[1], variables);
+	if(B->hijos[2]->hijos[0]->contenido != "epsilon"){
+		res &= EvaluarB(B, variables);
 	}
+	return res;
 }
 
 bool EvaluarCond3(Nodo* Cond3, Variables& variables){
@@ -174,37 +189,122 @@ bool EvaluarCond3(Nodo* Cond3, Variables& variables){
 				res = izq != der;
 				break;
 		}
+		
+		return res;
 	}
 }
 
-void EvaluarSino(Nodo* arbol, Variables& variables){
-
+void EvaluarSino(Nodo* Sino, Variables& variables){
+	if(Sino->hijos[0]->complex == Complex::Sino)
+		EvaluarCuerpo(Sino->hijos[2], variables);
 }
 
-double EvaluarOpAritmeticas(Nodo* arbol, Variables& variables, double& res){
-
+void EvaluarOpAritmeticas(Nodo* OpAritmeticas, Variables& variables, double& res){	
+	EvaluarT(OpAritmeticas->hijos[0], variables, res);
+	EvaluarW(OpAritmeticas->hijos[0], variables, res, res);
 }
 
-void EvaluarW(Nodo* arbol, Variables& variables){
+// W controla los operadores suma y resta
+void EvaluarW(Nodo* W, Variables& variables, double& izq, double& res){
+	Nodo* primerHijo = W->hijos[0];
+	if (primerHijo->complex == Complex::Mas) {
+		double resT = 0;
+		EvaluarT(W->hijos[1], variables, resT);
 
+		double resW = 0;
+		EvaluarW(W->hijos[2], variables, resT, resW);
+
+		res = izq + resW;
+	} else if (primerHijo->complex == Complex::Menos){
+		double resT = 0;
+		EvaluarT(W->hijos[1], variables, resT);
+
+		double resW = 0;
+		EvaluarW(W->hijos[2], variables, resT, resW);
+
+		res = izq - resW;
+	} else{
+		res = izq;
+	}
 }
 
-void EvaluarT(Nodo* arbol, Variables& variables){
-
+// T controla la prioridad de la potencia sobre la multiplicacion y division
+void EvaluarT(Nodo* T, Variables& variables, double& res){
+	EvaluarF(T->hijos[0], variables, res);
+	EvaluarZ(T->hijos[1], variables, res, res);
 }
 
-void EvaluarZ(Nodo* arbol, Variables& variables){
+// Z controla el producto y la division 
+void EvaluarZ(Nodo* Z, Variables& variables, double& izq, double& res){
+	Nodo* primerHijo = Z->hijos[0];
+	if (primerHijo->complex == Complex::Multiplicacion) {
+		double resF = 0;
+		EvaluarF(Z->hijos[1], variables, resF);
 
+		double resZ = 0;
+		EvaluarZ(Z->hijos[2], variables, resF, resZ);
+
+		res = izq * resZ;
+	} else if (primerHijo->complex == Complex::Division) {
+		double resF = 0;
+		EvaluarF(Z->hijos[1], variables, resF);
+
+		double resZ = 0;
+		EvaluarZ(Z->hijos[2], variables, resF, resZ);
+
+		res = izq / resZ;
+	} else {
+		res = izq;
+	}
 }
 
-void EvaluarF(Nodo* arbol, Variables& variables){
+// F controla la raiz cuadrada y se deriva en la potencia y terminales
+void EvaluarF(Nodo* F, Variables& variables, double& res){
+	Nodo* primerHijo = F->hijos[0];
+	if (primerHijo->complex == Complex::RaizCuadrada) {
+		EvaluarOpAritmeticas(F->hijos[2], variables, res);
+		res = sqrt(res);
 
+		EvaluarX(F->hijos[4], variables, res, res);
+	}else{
+		EvaluarR(primerHijo, variables, res);
+		EvaluarX(F->hijos[1], variables, res, res);
+	}
 }
 
-void EvaluarX(Nodo* arbol, Variables& variables){
+// X controla el operador potencia
+void EvaluarX(Nodo* X, Variables& variables, double& base, double& res){
+	Nodo* primerHijo = X->hijos[0];
+	if (primerHijo->complex == Complex::Potencia) {
+		double resR = 0;
+		EvaluarR(X->hijos[1], variables, resR);
 
+		double resX = 0;
+		EvaluarX(X->hijos[2], variables, resR, resX);
+
+		res = pow(base, resX);
+	}else{
+		res = base;
+	}	
 }
 
-void EvaluarR(Nodo* arbol, Variables& variables){
-
+// R controla los operadores
+void EvaluarR(Nodo* R, Variables& variables, double& res){
+	Nodo* primerHijo = R->hijos[0];
+	switch (primerHijo->complex)
+	{
+		case Complex::Id:
+			res = ObtenerValorVariable(primerHijo->lexema, variables);
+			break;
+		case Complex::Constante:
+			res = std::stod(primerHijo->lexema);
+			break;
+		case Complex::ParentesisA:
+			EvaluarOpAritmeticas(R->hijos[1], variables, res);
+			break;
+		case Complex::Menos:
+			EvaluarR(R->hijos[1], variables, res);
+			res *= -1;
+			break;
+	}
 }

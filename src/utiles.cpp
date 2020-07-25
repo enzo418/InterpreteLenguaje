@@ -40,7 +40,7 @@ void RaizAString(AnalizadorSintactico::Nodo* raiz, std::string& texto){
     for(int i = sz-1; i >= 0; i--) {
         std::ostringstream dirhijo;
 	    dirhijo << (void const *)raiz->hijos[i];
-		texto += "[" + dirhijo.str() +"_"+ raiz->hijos[i]->contenido + "]$";
+		texto += "¿" + dirhijo.str() +"_"+ raiz->hijos[i]->contenido + "?$";
 	}
 
     if(sz > 0)
