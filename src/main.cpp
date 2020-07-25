@@ -177,5 +177,5 @@ int main(int cant_args, char* args[]){
 	
 	LimpiarArbol(arbol);
 	
-	return codigo;
+	return 0;
 }

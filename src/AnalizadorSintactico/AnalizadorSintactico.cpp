@@ -70,6 +70,10 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 
 			if(!produccion.empty()){
 				size_t sz = produccion.size(); 
+				
+				// cambiamos el tamaño del vector para asegurarnos al menos sz posiciones disponibles
+				raiz->hijos.resize(sz);
+
 				// apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
 				for(int i = sz-1; i >= 0; i--) {
 					/**
@@ -78,7 +82,7 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 				
 					// Crear nodo hijo de X en el arbol
 					Nodo* nodo = new Nodo(produccion[i]);
-					raiz->hijos.push_back(nodo);
+					raiz->hijos[i] = nodo;
 					
 					// Si es epsilon va en el arbol pero no en la pila de simbolos.
 					if(strcmp(produccion[i], "epsilon") != 0)

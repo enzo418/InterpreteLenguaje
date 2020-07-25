@@ -37,7 +37,7 @@ void RaizAString(AnalizadorSintactico::Nodo* raiz, std::string& texto){
 	// agregar todos los hijos a la cadena separados por $
 	size_t sz = raiz->hijos.size(); 
     // apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
-    for(int i = sz-1; i >= 0; i--) {
+    for(int i = 0; i < sz; i++) {
         std::ostringstream dirhijo;
 	    dirhijo << (void const *)raiz->hijos[i];
 		texto += "¿" + dirhijo.str() +"_"+ raiz->hijos[i]->contenido + "?$";

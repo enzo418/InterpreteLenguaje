@@ -3,8 +3,12 @@
 #include "tipos.hpp"
 #include "ettd.hpp"
 
+#include "../AnalizadorLexico/utiles.hpp"
+
 #include <string>
 #include <math.h>
+
+#include <algorithm>
 
 using Nodo=AnalizadorSintactico::Nodo;
 using Variables=Sintesis::Variables;
@@ -169,8 +173,9 @@ bool EvaluarCond3(Nodo* Cond3, Variables& variables){
 		EvaluarOpAritmeticas(Cond3->hijos[2], variables, der);
 
 		bool res = false;
+		Complex complex = StringAComplex(Cond3->hijos[1]->lexema);
 
-		switch (Cond3->hijos[1]->complex) {
+		switch (complex) {
 			case Complex::Mayor:
 				res = izq > der;
 				break;
@@ -202,7 +207,7 @@ void EvaluarSino(Nodo* Sino, Variables& variables){
 
 void EvaluarOpAritmeticas(Nodo* OpAritmeticas, Variables& variables, double& res){	
 	EvaluarT(OpAritmeticas->hijos[0], variables, res);
-	EvaluarW(OpAritmeticas->hijos[0], variables, res, res);
+	EvaluarW(OpAritmeticas->hijos[1], variables, res, res);
 }
 
 // W controla los operadores suma y resta
