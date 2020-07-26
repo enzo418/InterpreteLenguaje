@@ -2,6 +2,9 @@
 #include <fstream>
 #include <string.h>
 #include <sstream>
+#include <algorithm>
+
+#include "utiles.hpp"
 
 #include "AnalizadorSintactico/tipos.hpp"
 
@@ -16,13 +19,15 @@ bool AbrirArchivo(std::ifstream& fuente, std::string archivo){
     return true;
 }
 
-void LeerArgumentos(int cant_args, char* args[], std::string& archivoFuente){
+void LeerArgumentos(int cant_args, char* args[], std::string& archivoFuente, bool& volcar){
 	archivoFuente = "entrada.txt";
 
 	for (size_t i = 0; i < cant_args; i++) {
 		if(strcmp(args[i], "-fuente") == 0 && cant_args >= i+1){
 			archivoFuente = args[i+1];
-		}// else if ... tomar mas argumentos
+		} else if(strcmp(args[i], "-volcar") == 0){
+			volcar = true;
+		}
 	}
 
 }
@@ -66,4 +71,44 @@ void ArbolAArchivo(AnalizadorSintactico::Nodo* arbol){
 	outfile << texto << std::endl;
 
 	outfile.close();	    
+}
+
+
+void ManejarErrorYSalir(std::string mensaje, ulong* controlMasCercano){
+	std::cout << mensaje << std::endl;
+
+	if(controlMasCercano){
+		std::ifstream archivo;
+		AbrirArchivo(archivo, _ArchivoFuente);
+
+		archivo.seekg(*controlMasCercano - 1);
+
+		VolverHastaNuevaLinea(archivo);
+		
+		std::string linea;
+		std::getline(archivo, linea);
+
+		// Quitar los tabs
+		linea.erase(std::remove( linea.begin(), linea.end(), '\t' ),linea.end());
+
+		std::cout << "\n" << _ArchivoFuente << ":" << *controlMasCercano << " \"" << linea << "\"" << std::endl;
+	}
+	
+	std::exit(EXIT_FAILURE);
+}
+
+void VolverHastaNuevaLinea(std::ifstream& archivo){
+	char sig = archivo.peek();
+	while (archivo.peek() <= 32 && archivo.good()) {
+		archivo.unget();
+	}
+
+	while (archivo.tellg() != 0 && archivo.good())
+	{
+		sig = archivo.peek();
+		if(sig == '\r' || sig == '\n'){
+			archivo.get();		
+			break;	
+		}else archivo.unget();
+	}
 }

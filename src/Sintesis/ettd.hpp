@@ -8,11 +8,6 @@ using Nodo=AnalizadorSintactico::Nodo;
 using Variables=Sintesis::Variables;
 using Complex=AnalizadorLexico::ComponenteLexico;
 
-// decimos que _ERROR esta en otro archivo
-extern bool _ERROR;
-
-void AgregarVariable(std::string lexema, Variables& variables);
-
 void EvaluarPrograma(Nodo* arbol);
 
 void EvaluarVariables(Nodo* arbol, Variables& variables);
@@ -25,7 +20,7 @@ void EvaluarSent(Nodo* Sent, Variables& variables);
 
 void EvaluarAsignacion(Nodo* OperacionAritmetica, std::string lexema, Variables& variables);
 
-void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables);
+void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, ulong* controlMasCercano);
 
 void EvaluarEscribir(std::string cadena, Nodo* OperacionAritmetica, Variables& variables);
 

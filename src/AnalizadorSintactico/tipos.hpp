@@ -16,6 +16,8 @@ namespace AnalizadorSintactico{
 		AnalizadorLexico::ComponenteLexico complex;
 
 		std::string lexema;
+
+		ulong* control = nullptr;
 		
 		// inicializador
 		Nodo(const char* cont): contenido(cont){}

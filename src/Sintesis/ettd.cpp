@@ -5,6 +5,8 @@
 
 #include "../AnalizadorLexico/utiles.hpp"
 
+#include "../utiles.hpp"
+
 #include <string>
 #include <math.h>
 
@@ -17,22 +19,19 @@ using Complex=AnalizadorLexico::ComponenteLexico;
 #define VariableNoExiste(var, vars) vars.find(var) == vars.end()
 #define VariableExiste(var, vars) vars.find(var) != vars.end()
 
-double ObtenerValorVariable(std::string lexema, Variables& variables){
+double ObtenerValorVariable(std::string lexema, Variables& variables, ulong* controlMasCercano){
 	if(VariableExiste(lexema, variables)){
 		return variables[lexema];
 	} else {
-		_ERROR = true;		
-		std::cout << "Error: Variable " << lexema << " ignorada, ya que ya fue declarada previamente." << std::endl;
-		return 0;
+		ManejarErrorYSalir("ERROR: Uso de la variable " + lexema + " no declarada.", controlMasCercano);
 	}
 }
 
-void AgregarVariable(std::string lexema, Variables& variables){	
+void AgregarVariable(std::string lexema, Variables& variables, ulong* controlMasCercano){	
 	if(VariableNoExiste(lexema, variables)){
 		variables.insert({lexema, 0});
 	} else {
-		_ERROR = true;		
-		std::cout << "Error: Variable " << lexema << " ignorada, ya que ya fue declarada previamente." << std::endl;
+		ManejarErrorYSalir("ERROR: Variable " + lexema + " ya declarada.", controlMasCercano);
 	}
 }
 
@@ -43,14 +42,14 @@ void EvaluarPrograma(Nodo* arbol){
 }
 
 void EvaluarVariables(Nodo* arbol, Variables& variables){
-	AgregarVariable(arbol->hijos[0]->lexema, variables);
+	AgregarVariable(arbol->hijos[0]->lexema, variables, arbol->control);
 	EvaluarIdVar(arbol->hijos[1], variables);
 }
 
 void EvaluarIdVar(Nodo* IdVar, Variables& variables){
 	Nodo* primerHijo = IdVar->hijos[0];
 	if(primerHijo->complex == Complex::Coma){
-		AgregarVariable(IdVar->hijos[1]->lexema, variables);
+		AgregarVariable(IdVar->hijos[1]->lexema, variables, IdVar->control);
 		EvaluarIdVar(IdVar->hijos[2], variables);
 	}
 }
@@ -70,7 +69,7 @@ void EvaluarSent(Nodo* Sent, Variables& variables){
 			EvaluarAsignacion(Sent->hijos[2], primerHijo->lexema, variables);
 			break;
 		case Complex::Leer:
-			EvaluarLeer(Sent->hijos[2]->lexema, Sent->hijos[4]->lexema, variables);
+			EvaluarLeer(Sent->hijos[2]->lexema, Sent->hijos[4]->lexema, variables, Sent->control);
 			break;
 		case Complex::Escribir:
 			EvaluarEscribir(Sent->hijos[2]->lexema, Sent->hijos[4], variables);
@@ -92,27 +91,26 @@ void EvaluarAsignacion(Nodo* OperacionAritmetica, std::string lexema, Variables&
 		EvaluarOpAritmeticas(OperacionAritmetica, variables, res);
 
 		variables[lexema] = res;
-	}else{
-		// ERROR		
-		std::cout << "Error! Variable " << lexema << " no declarada." << std::endl;
+	}else{		
+		ManejarErrorYSalir("ERROR: Uso de la variable " + lexema + " no declarada", OperacionAritmetica->control);
 	}
 }
 
-void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables){
+void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, ulong* controlMasCercano){
 	if(VariableExiste(lexema, variables)){
 		std::cout << cadena;
 		std::cin >> variables[lexema];
 	}else{
-		// ERROR
-		std::cout << "Error! Variable " << lexema << " no declarada en leer(" << cadena << ", " << lexema  << std::endl;
+		ManejarErrorYSalir("ERROR: Uso de la variable " + lexema + " no declarada.", controlMasCercano);
 	}
 }
 
 void EvaluarEscribir(std::string cadena, Nodo* OperacionAritmetica, Variables& variables){
 	double res = 0;
 	EvaluarOpAritmeticas(OperacionAritmetica, variables, res);
-
-	std::cout << cadena << res;
+	cadena.erase(std::remove( cadena.begin(), cadena.end(), '\"' ),cadena.end());
+	
+	std::cout << cadena << res << std::endl;
 }
 
 void EvaluarMientras(Nodo* Condiciones, Nodo* Cuerpo, Variables& variables){
@@ -300,7 +298,7 @@ void EvaluarR(Nodo* R, Variables& variables, double& res){
 	switch (primerHijo->complex)
 	{
 		case Complex::Id:
-			res = ObtenerValorVariable(primerHijo->lexema, variables);
+			res = ObtenerValorVariable(primerHijo->lexema, variables, R->control);
 			break;
 		case Complex::Constante:
 			res = std::stod(primerHijo->lexema);

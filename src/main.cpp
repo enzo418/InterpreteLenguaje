@@ -11,17 +11,17 @@
 
 using Complex=AnalizadorLexico::ComponenteLexico;
 
-bool _ERROR = false;
+std::string _ArchivoFuente;
 
 int main(int cant_args, char* args[]){	
-	std::string archivoFuente;
+	bool volcar = false;
 
-	LeerArgumentos(cant_args, args, archivoFuente);
+	LeerArgumentos(cant_args, args, _ArchivoFuente, volcar);
 
 	std::ifstream fuente;
 
-	if(!AbrirArchivo(fuente, archivoFuente)){
-		std::cout << "El archivo no existe" << std::endl;
+	if(!AbrirArchivo(fuente, _ArchivoFuente)){
+		std::cout << "El archivo " << _ArchivoFuente << " no existe" << std::endl;
 		return 0;
 	}
 	
@@ -169,8 +169,8 @@ int main(int cant_args, char* args[]){
 
 	AnalizadorSintactico::Nodo* arbol = new AnalizadorSintactico::Nodo(SimboloInicial);
 
-	int codigo = ObtenerArbolDerivacion(fuente, arbol, std::ref(tas), std::ref(ts), SimboloInicial);
-	
+	int codigo = ObtenerArbolDerivacion(fuente, arbol, std::ref(tas), std::ref(ts), SimboloInicial, volcar);
+		
 	EvaluarPrograma(arbol);
 
 	ArbolAArchivo(arbol);
