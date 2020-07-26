@@ -390,6 +390,9 @@ bool EsSimboloEspecial(std::ifstream& fuente, ulong& control, std::string& lexem
 		case '*':
 			cl = ComponenteLexico::Multiplicacion;
 			break;
+		case '^':
+			cl = ComponenteLexico::Potencia;
+			break;
 		case ',':
 			cl = ComponenteLexico::Coma;
 			break;

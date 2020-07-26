@@ -98,6 +98,8 @@ void EvaluarAsignacion(Nodo* OperacionAritmetica, std::string lexema, Variables&
 
 void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, ulong* controlMasCercano){
 	if(VariableExiste(lexema, variables)){
+		cadena.erase(std::remove( cadena.begin(), cadena.end(), '\"' ),cadena.end());
+		
 		std::cout << cadena;
 		std::cin >> variables[lexema];
 	}else{
