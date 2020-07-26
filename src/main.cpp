@@ -14,6 +14,7 @@ using Complex=AnalizadorLexico::ComponenteLexico;
 std::string _ArchivoFuente;
 
 int main(int cant_args, char* args[]){	
+	// Volcar: Mostrar por consola que esta haciendo el programa
 	bool volcar = false;
 
 	LeerArgumentos(cant_args, args, _ArchivoFuente, volcar);
@@ -173,7 +174,8 @@ int main(int cant_args, char* args[]){
 		
 	EvaluarPrograma(arbol);
 
-	ArbolAArchivo(arbol);
+	if(volcar)
+		ArbolAArchivo(arbol);
 	
 	LimpiarArbol(arbol);
 	
