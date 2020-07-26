@@ -165,13 +165,6 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 		std::cout << "\n# FASE: Analisis finalizada sin errores." << std::endl;
 		
 	}else if(!exito) {
-		/*
-		std::cout	<< "\nERROR [AS]: " << std::endl
-					<< "\t " << mensajeError << std::endl
-
-					<< "\t En la posicion: " << control << std::endl;
-		*/
-
 		ManejarErrorYSalir(mensajeError, &control);
 		
 		std::exit(EXIT_FAILURE);		
