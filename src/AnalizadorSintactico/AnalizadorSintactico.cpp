@@ -1,13 +1,11 @@
 #include <iostream>
 #include "string.h"
-#include <sstream>
 
 #include "AnalizadorSintactico.hpp"
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
 #include "../AnalizadorLexico/utiles.hpp"
 #include "../tipos.hpp"
 #include "tipos.hpp"
-#include "utiles.hpp"
 
 #include "../utiles.hpp"
 
@@ -40,8 +38,6 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 	ulong control = 0;
 	std::string lexema = "";
 	AnalizadorLexico::ComponenteLexico complex = AnalizadorLexico::ComponenteLexico::Id;	
-
-	std::ostringstream mensajeLog;
 	
 	// lista de las producciones generadas por una VariablexToken
 	Produccion produccion;
@@ -67,21 +63,17 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 			produccion = tas[{X, complex}];
 
 			if(volcar)
-			{
-				mensajeLog.clear();
-
-				mensajeLog << "\nDesapilada Variable: \n\t"
+			{				
+				std::cout << "\nDesapilada Variable: \n\t"
 					<< "X: " << X
 					<< " | lexema: " << lexema
 					<< " | producciones: ";
 
 				for (auto const& val : produccion) {
-					mensajeLog << val << " ";
+					std::cout << val << " ";
 				}
 
-				mensajeLog << std::endl;
-
-				ImprimirLog(mensajeLog.str());
+				std::cout << std::endl;
 			}
 
 			if(!produccion.empty()){
@@ -127,14 +119,11 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 		} else {	
 			if(volcar)
 			{
-				mensajeLog.clear();
-				mensajeLog 	<< "\nDesapilado Terminal: \n\t"
+				std::cout 	<< "\nDesapilado Terminal: \n\t"
 						<< "X = " << X 
 						<< " | lexema = " << lexema 
 						<< " | complex iguales? " << (StringAComplex(X) == complex ? "si" : "no") 
 						<< std::endl;
-				
-				ImprimirLog(mensajeLog.str());
 			}
 
 			if(StringAComplex(X) == complex){
@@ -154,13 +143,10 @@ int ObtenerArbolDerivacion(std::ifstream& fuente, Nodo* arbol, TAS& tas, Analiza
 
 				if(volcar)
 				{
-					mensajeLog.clear();
-					mensajeLog 	<< "\nObterner nuevo Complex: \n\t"
+					std::cout 	<< "\nObterner nuevo Complex: \n\t"
 							<< "lexema = " << lexema 
 							<< " | control = " << control 
 							<< std::endl;
-					
-					ImprimirLog(mensajeLog.str());
 				}
 			}else{
 				error = true;
