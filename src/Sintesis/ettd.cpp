@@ -11,6 +11,7 @@
 #include <math.h>
 
 #include <algorithm>
+#include <cmath>
 
 using Nodo=AnalizadorSintactico::Nodo;
 using Variables=Sintesis::Variables;
@@ -278,7 +279,7 @@ void EvaluarF(Nodo* F, Variables& variables, double& res){
 	}
 }
 
-// X controla el operador potencia
+// X controla el operador potencia y modulo
 void EvaluarX(Nodo* X, Variables& variables, double& base, double& res){
 	Nodo* primerHijo = X->hijos[0];
 	if (primerHijo->complex == Complex::Potencia) {
@@ -289,6 +290,14 @@ void EvaluarX(Nodo* X, Variables& variables, double& base, double& res){
 		EvaluarX(X->hijos[2], variables, resR, resX);
 
 		res = pow(base, resX);
+	} else if (primerHijo->complex == Complex::Modulo) {
+		double resR = 0;
+		EvaluarR(X->hijos[1], variables, resR);
+
+		double resX = 0;
+		EvaluarX(X->hijos[2], variables, resR, resX);
+
+		res = std::fmod(base, resX);
 	}else{
 		res = base;
 	}	

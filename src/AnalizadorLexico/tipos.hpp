@@ -17,7 +17,7 @@ namespace AnalizadorLexico {
 	enum ComponenteLexico {
 		Igual, DobleIgual, And, Not, Or, LlavesA, LlavesC, Si, Sino, Mientras, Leer, 
 		Escribir, ParentesisA, ParentesisC, CorcheteA, CorcheteC, Coma, Mas, Menos, Multiplicacion, 
-		Division, Potencia, RaizCuadrada, Var, Id, Constante, Cadena, OpRel,  ErrorLexico, 
+		Division, Potencia, RaizCuadrada, Var, Id, Constante, Cadena, OpRel,  ErrorLexico, Modulo,
 		FDA /* Fin de Archivo */,
 		Menor, Mayor, Diferente, MenorIgual, MayorIgual
 	};

@@ -69,6 +69,8 @@ Complex StringAComplex(std::string X){
 		c=Complex::Division;
 	else if(X == "^")
 		c=Complex::Potencia;
+	else if(X == "%")
+		c=Complex::Modulo;
 	else if(X == "rcd")
 		c=Complex::RaizCuadrada;
 	else if(X == "var")

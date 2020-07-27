@@ -146,6 +146,7 @@ int main(int cant_args, char* args[]){
 		{ 	{"<X>",               Complex::Mientras},						{"epsilon"} },
 		{ 	{"<X>",               Complex::ParentesisC},			{"epsilon"} },
 		{ 	{"<X>",               Complex::CorcheteC},				{"epsilon"} },
+		{ 	{"<X>",               Complex::Modulo},				{"%", "<R>", "<X>"} },
 
 		{ 	{"<R>",         	Complex::Menos},					{"-", "<R>"} },
 		{ 	{"<R>",         	Complex::Id},						{"id"} },
