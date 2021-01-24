@@ -10,7 +10,7 @@ Es in interprete de un lenguaje de programación que los integrantes llamamos "F
 Este programa también reconoce un argumento opcional que se utiliza para obtener más información por la consola sobre lo que va realizando en la Fase de Análisis, ese argumento es -volcar. Ejemplo, ./Interprete.exe -volcar
 
 # Ejemplos de programas en este lenguaje
-A contiación algunos ejemplos para mostrar la sintaxis, en el siguiente titulo se detallan.
+A continuación algunos ejemplos para mostrar la sintaxis, en el siguiente título se detallan.
 
 ## Calcular el n-ésimo número de la sucesión de Fibonacci.
 	var n, actual, ant1, ant2, i
@@ -60,18 +60,19 @@ A contiación algunos ejemplos para mostrar la sintaxis, en el siguiente titulo 
 		escribir("MCM: ", mcm)
 	}
 # Definición formal de la sintaxis mediante una gramática en [notación Backus-Naur (BN)](https://es.wikipedia.org/wiki/Notaci%C3%B3n_de_Backus-Naur#Introducci%C3%B3n).
-<Programa> 	:== “var” <Variables> “{“ <Cuerpo> “}”
-<Variables> 	:== “id” <IdVar>
-<IdVar> 	:== “,” “id” <IdVar> | epsilon
-<Cuerpo>	:== <Sent> <Cuerpo> | epsilon
-<Sent>	:== “id”  “=” <OpAritmeticas>
-| “leer” “(“ “cadena” “,” “id” “)” | “escribir” “(“ “cadena” “,” <OpAritmeticas> “)”
-| “mientras” “(“ <Condiciones> “)” “{“ <Cuerpo> “}” | “si” “(“ <Condiciones> “)” “{“ <Cuerpo> “}” <Sino>
-<Condiciones> :== <Cond2> “or” <Condiciones> | <Cond2>
-<Cond2>  	:== <Cond3> “and” <Cond2> | <Cond3>
-<Cond3> 	:== “not” <Cond3> | “[“ <Condiciones> “]”  | <OpAritmeticas> “opRel” <OpAritmeticas>
-<Sino>	:== “sino” “{“ <Cuerpo> “}” | epsilon	
-<OpAritmeticas> :== <OpAritmeticas> “+” <T> | <OpAritmeticas>  “-” <T> | <T>
-<T> 		:== <T>  “*” <F> | <T>  “/” <F> |<F>
-<F> 		:== <F>  “^” <R> | “rcd” “(“ <OpAritmeticas> “)” | <R> | <F> “%” <R>
-<R> 		:== “id” | “constante” | “(“ <OpAritmeticas> “)” | “-” <R>
+	<Programa> 	:== “var” <Variables> “{“ <Cuerpo> “}”
+	<Variables> 	:== “id” <IdVar>
+	<IdVar> 	:== “,” “id” <IdVar> | epsilon
+	<Cuerpo>	:== <Sent> <Cuerpo> | epsilon
+	<Sent>	:== “id”  “=” <OpAritmeticas>
+		| “leer” “(“ “cadena” “,” “id” “)” | “escribir” “(“ “cadena” “,” <OpAritmeticas> “)”
+		| “mientras” “(“ <Condiciones> “)” “{“ <Cuerpo> “}” | “si” “(“ <Condiciones> “)” “{“ <Cuerpo> “}” <Sino>
+	<Condiciones> :== <Cond2> “or” <Condiciones> | <Cond2>
+	<Cond2>  	:== <Cond3> “and” <Cond2> | <Cond3>
+	<Cond3> 	:== “not” <Cond3> | “[“ <Condiciones> “]”  | <OpAritmeticas> “opRel” <OpAritmeticas>
+	<Sino>	:== “sino” “{“ <Cuerpo> “}” | epsilon	
+	<OpAritmeticas> :== <OpAritmeticas> “+” <T> | <OpAritmeticas>  “-” <T> | <T>
+	<T> 		:== <T>  “*” <F> | <T>  “/” <F> |<F>
+	<F> 		:== <F>  “^” <R> | “rcd” “(“ <OpAritmeticas> “)” | <R> | <F> “%” <R>
+	<R> 		:== “id” | “constante” | “(“ <OpAritmeticas> “)” | “-” <R>
+
