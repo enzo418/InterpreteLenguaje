@@ -1,5 +1,5 @@
 # Que es?
-Es in interprete de un lenguaje de programación que los integrantes llamamos "Factorial".
+Es in interprete de un lenguaje de programación que los integrantes llamamos "Factorial". Hay un solo tipo de dato, digitos. Aunque permita imprimir cadenas, estas no pueden ser asignadas a variables.
 
 # Como usarlo?
 1. Ir a [releases](https://github.com/enzo418/InterpreteLenguaje/releases) y descargarlo.
