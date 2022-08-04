@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <fstream>
 #include <functional>  // std::ref
 #include <iostream>
@@ -14,6 +15,8 @@ using Complex=AnalizadorLexico::ComponenteLexico;
 std::string _ArchivoFuente;
 
 void print(const char* c) { std::cout << c; }
+
+void read(double& dst) { std::cin >> dst; }
 
 int main(int cant_args, char* args[]) {
     std::ifstream fuente;
@@ -34,8 +37,7 @@ int main(int cant_args, char* args[]) {
     buffer << fuente.rdbuf();
     std::string input = buffer.str();
 
-    Interprete intp;
-    intp.Interpretar(input, 0, (intptr_t)(&print));
+    Interprete::Interpretar(input, (intptr_t)(&print), (intptr_t)(&read));
 }
 
 int tt(int cant_args, char* args[]) {

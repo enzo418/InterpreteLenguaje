@@ -104,7 +104,8 @@ void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, u
 
         ((writeFunc*)InstancePointers::getWriteFuncPtr())(cadena.c_str());
         // std::cout << cadena;
-        std::cin >> variables[lexema];
+        ((readFunc*)InstancePointers::getReadFuncPtr())(variables[lexema]);
+        // std::cin >> variables[lexema];
     } else {
         ManejarErrorYSalir(
             "ERROR: Uso de la variable " + lexema + " no declarada.",
@@ -117,7 +118,7 @@ void EvaluarEscribir(std::string cadena, Nodo* OperacionAritmetica, Variables& v
     EvaluarOpAritmeticas(OperacionAritmetica, variables, res);
     cadena.erase(std::remove(cadena.begin(), cadena.end(), '\"'), cadena.end());
 
-    cadena += std::to_string(res);
+    cadena += std::to_string(res) + "\n";
 
     ((writeFunc*)InstancePointers::getWriteFuncPtr())(cadena.c_str());
     // std::cout << cadena << res << std::endl;

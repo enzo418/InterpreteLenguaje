@@ -10,7 +10,7 @@ void Interprete::Interpretar(std::string& input, intptr_t write_func_ptr,
     AnalizadorSintactico::Nodo* arbol =
         new AnalizadorSintactico::Nodo(SimboloInicial);
 
-    std::ifstream fuente(input.c_str());
+    std::istringstream fuente(input.c_str());
     int codigo =
         ObtenerArbolDerivacion(fuente, arbol, tas, ts, SimboloInicial, false);
 

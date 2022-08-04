@@ -2,7 +2,7 @@
 
 #include <cstdint>
 typedef void writeFunc(const char*);
-typedef void readFunc(const char*);
+typedef void readFunc(double&);
 
 class InstancePointers {
    private:

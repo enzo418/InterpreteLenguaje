@@ -1,10 +1,9 @@
 #pragma once
 
-// #include <emscripten/bind.h>
-
 #include <fstream>
 #include <functional>  // std::ref
 #include <iostream>
+#include <sstream>
 
 #include "AnalizadorLexico/tipos.hpp"
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
