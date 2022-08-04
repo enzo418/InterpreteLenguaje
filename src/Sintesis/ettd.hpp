@@ -1,7 +1,8 @@
 #pragma once
 
-#include "ettd.hpp"
 #include "../AnalizadorSintactico/tipos.hpp"
+#include "../InstancePointers.hpp"
+#include "ettd.hpp"
 #include "tipos.hpp"
 
 using Nodo=AnalizadorSintactico::Nodo;

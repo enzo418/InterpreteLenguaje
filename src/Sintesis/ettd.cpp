@@ -98,22 +98,29 @@ void EvaluarAsignacion(Nodo* OperacionAritmetica, std::string lexema, Variables&
 }
 
 void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, ulong* controlMasCercano){
-	if(VariableExiste(lexema, variables)){
-		cadena.erase(std::remove( cadena.begin(), cadena.end(), '\"' ),cadena.end());
-		
-		std::cout << cadena;
-		std::cin >> variables[lexema];
-	}else{
-		ManejarErrorYSalir("ERROR: Uso de la variable " + lexema + " no declarada.", controlMasCercano);
-	}
+    if (VariableExiste(lexema, variables)) {
+        cadena.erase(std::remove(cadena.begin(), cadena.end(), '\"'),
+                     cadena.end());
+
+        ((writeFunc*)InstancePointers::getWriteFuncPtr())(cadena.c_str());
+        // std::cout << cadena;
+        std::cin >> variables[lexema];
+    } else {
+        ManejarErrorYSalir(
+            "ERROR: Uso de la variable " + lexema + " no declarada.",
+            controlMasCercano);
+    }
 }
 
 void EvaluarEscribir(std::string cadena, Nodo* OperacionAritmetica, Variables& variables){
-	double res = 0;
-	EvaluarOpAritmeticas(OperacionAritmetica, variables, res);
-	cadena.erase(std::remove( cadena.begin(), cadena.end(), '\"' ),cadena.end());
-	
-	std::cout << cadena << res << std::endl;
+    double res = 0;
+    EvaluarOpAritmeticas(OperacionAritmetica, variables, res);
+    cadena.erase(std::remove(cadena.begin(), cadena.end(), '\"'), cadena.end());
+
+    cadena += std::to_string(res);
+
+    ((writeFunc*)InstancePointers::getWriteFuncPtr())(cadena.c_str());
+    // std::cout << cadena << res << std::endl;
 }
 
 void EvaluarMientras(Nodo* Condiciones, Nodo* Cuerpo, Variables& variables){

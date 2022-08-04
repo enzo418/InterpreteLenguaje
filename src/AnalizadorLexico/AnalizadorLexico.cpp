@@ -11,12 +11,16 @@ bool ObtenerSiguienteComplex(std::ifstream& fuente, ulong& control, ComponenteLe
      *  get()       Obtiene y devuelve el caracter sobre el cual esta el cursor del archivo.
      *  eof()       Verifica si es el final del archivo
      *  tellg()     Devuelve la posicion actual del puntero|control|cursor archivo.
-    */        
+    */
 
-    // -- Quitar los caracteres no necesarios	
-	while (fuente.peek() <= 32 && !fuente.eof()) {
-		fuente.get();
-		control++;
+    lexema = (char)32;
+
+    // -- Quitar los caracteres no necesarios
+    while (fuente.peek() <= 32 && !fuente.eof()) {
+        std::cout << "control" << control << " | tg: " << fuente.tellg()
+                  << std::endl;
+        fuente.get();
+        control++;
 	}
 	 
 	// Si se termino el archivo
