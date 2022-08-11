@@ -102,9 +102,10 @@ void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, u
         cadena.erase(std::remove(cadena.begin(), cadena.end(), '\"'),
                      cadena.end());
 
-        ((writeFunc*)InstancePointers::getWriteFuncPtr())(cadena.c_str());
+        ((writeFunc*)InstancePointers::getWriteBeforeReadFuncPtr())(
+            cadena.c_str());
         // std::cout << cadena;
-        ((readFunc*)InstancePointers::getReadFuncPtr())(variables[lexema]);
+        variables[lexema] = ((readFunc*)InstancePointers::getReadFuncPtr())();
         // std::cin >> variables[lexema];
     } else {
         ManejarErrorYSalir(

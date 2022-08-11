@@ -18,6 +18,8 @@ void print(const char* c) { std::cout << c; }
 
 void read(double& dst) { std::cin >> dst; }
 
+// int main(int, char* arg[]) {}
+
 int main(int cant_args, char* args[]) {
     std::ifstream fuente;
     std::cout << "1\n";
@@ -26,7 +28,7 @@ int main(int cant_args, char* args[]) {
     LeerArgumentos(cant_args, args, _ArchivoFuente, volcar);
 
     if (!AbrirArchivo(fuente, _ArchivoFuente)) {
-        std::cout << "El archivo " << _ArchivoFuente << " no existe"
+        std::cout << "ERROR: El archivo " << _ArchivoFuente << " no existe"
                   << std::endl;
         return 0;
     }
@@ -37,7 +39,8 @@ int main(int cant_args, char* args[]) {
     buffer << fuente.rdbuf();
     std::string input = buffer.str();
 
-    Interprete::Interpretar(input, (intptr_t)(&print), (intptr_t)(&read));
+    Interprete::Interpretar(input, (intptr_t)(&print), (intptr_t)(&read),
+                            (intptr_t)(&print));
 }
 
 int tt(int cant_args, char* args[]) {

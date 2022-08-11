@@ -1,5 +1,7 @@
 #pragma once
 
+#include <emscripten/val.h>
+
 #include "../AnalizadorSintactico/tipos.hpp"
 #include "../InstancePointers.hpp"
 #include "ettd.hpp"
