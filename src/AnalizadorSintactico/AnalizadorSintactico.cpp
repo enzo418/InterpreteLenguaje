@@ -1,13 +1,13 @@
-#include <iostream>
-#include "string.h"
-
 #include "AnalizadorSintactico.hpp"
+
+#include <iostream>
+
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
 #include "../AnalizadorLexico/utiles.hpp"
 #include "../tipos.hpp"
-#include "tipos.hpp"
-
 #include "../utiles.hpp"
+#include "string.h"
+#include "tipos.hpp"
 
 using namespace AnalizadorSintactico;
 using Complex=AnalizadorLexico::ComponenteLexico;
@@ -24,9 +24,10 @@ void LimpiarArbol(Nodo* raiz, Nodo* padre){
 	if(padre) padre->hijos.erase(padre->hijos.begin()); // borrar el primer elem del vector
 }
 
-int ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
-                           AnalizadorLexico::TablaSimbolos& ts,
-                           const char* SimboloInicial, const bool& volcar) {
+bool ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
+                            AnalizadorLexico::TablaSimbolos& ts,
+                            const char* SimboloInicial, const bool& volcar,
+                            Error& errorData) {
     Nodo* raiz = arbol;
 
     Pila pilaSimbolos;
@@ -35,7 +36,6 @@ int ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
 
     bool exito = false;
     bool error = false;
-    std::string mensajeError = "";
 
     ulong control = 0;
     std::string lexema = "";
@@ -46,8 +46,9 @@ int ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
     Produccion produccion;
 
     if (!ObtenerSiguienteComplex(fuente, control, complex, lexema, ts)) {
+        errorData = Error(0, 0, 10, "El archivo esta vacio");
         std::cout << "El archivo esta vacio" << std::endl;
-        return 0;
+        return false;
     }
 
     ulong* controlPunt = new ulong(0);
@@ -116,11 +117,19 @@ int ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
 
                     if (_F == "opRel") _F = "operador relacional";
 
-                    mensajeError = "Se esperaba \"" + _F + "\", se obtuvo \"" +
-                                   lexema + "\"";
-                } else
-                    mensajeError = "Caracter no esperado \"" + lexema +
-                                   "\" Con la variable " + std::string(X);
+                    auto [linea, columna] =
+                        ObtenerLineaColumnaDeControl(fuente, *raiz->control);
+                    errorData = Error(linea, columna, raiz->contenido.length(),
+                                      "Se esperaba \"" + _F +
+                                          "\", se obtuvo \"" + lexema + "\"");
+                } else {
+                    auto [linea, columna] =
+                        ObtenerLineaColumnaDeControl(fuente, *raiz->control);
+                    errorData =
+                        Error(linea, columna, lexema.length(),
+                              "Caracter no esperado \"" + lexema +
+                                  "\" Con la variable " + std::string(X));
+                }
             }
         } else {
             if (volcar) {
@@ -159,20 +168,21 @@ int ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
 
                 if (_X == "opRel") _X = "operador relacional";
 
-                mensajeError =
-                    "Se esperaba \"" + _X + "\", se obtuvo \"" + lexema + "\"";
+                auto [linea, columna] =
+                    ObtenerLineaColumnaDeControl(fuente, control);
+
+                errorData = Error(
+                    linea, columna, lexema.length(),
+                    "Se esperaba \"" + _X + "\", se obtuvo \"" + lexema + "\"");
             }
         }
     }
 
-    if (exito && volcar) {
+    if (!error && exito && volcar) {
         std::cout << "\n# FASE: Analisis finalizada sin errores." << std::endl;
-
-    } else if (!exito) {
-        ManejarErrorYSalir(mensajeError, &control);
-
-        std::exit(EXIT_FAILURE);
+    } else if (!exito && error) {
+        return false;
     }
 
-    return 0;
+    return true;
 }

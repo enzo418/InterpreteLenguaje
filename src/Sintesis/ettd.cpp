@@ -20,39 +20,46 @@ using Complex=AnalizadorLexico::ComponenteLexico;
 #define VariableNoExiste(var, vars) vars.find(var) == vars.end()
 #define VariableExiste(var, vars) vars.find(var) != vars.end()
 
-double ObtenerValorVariable(std::string lexema, Variables& variables, ulong* controlMasCercano){
-	if(VariableExiste(lexema, variables)){
-		return variables[lexema];
-	} else {
-		ManejarErrorYSalir("ERROR: Uso de la variable " + lexema + " no declarada.", controlMasCercano);
-	}
+double ObtenerValorVariable(Nodo* id, Variables& variables,
+                            ulong* controlMasCercano) {
+    if (VariableExiste(id->lexema, variables)) {
+        return variables[id->lexema];
+    } else {
+        ManejarErrorYSalir(
+            Error(-1, -1, id->lexema.length(),
+                  "Uso de la variable '" + id->lexema + "' no declarada."),
+            id->control);
+    }
 }
 
-void AgregarVariable(std::string lexema, Variables& variables, ulong* controlMasCercano){	
-	if(VariableNoExiste(lexema, variables)){
-		variables.insert({lexema, 0});
-	} else {
-		ManejarErrorYSalir("ERROR: Variable " + lexema + " ya declarada.", controlMasCercano);
-	}
+void AgregarVariable(Nodo* id, Variables& variables, ulong* controlMasCercano) {
+    if (VariableNoExiste(id->lexema, variables)) {
+        variables.insert({id->lexema, 0});
+    } else {
+        ManejarErrorYSalir(Error(-1, -1, id->lexema.length(),
+                                 "Variable '" + id->lexema + "' ya declarada."),
+                           id->control);
+    }
 }
 
-void EvaluarPrograma(Nodo* arbol){
-	Variables variables;
-	EvaluarVariables(arbol->hijos[1], variables);
-	EvaluarCuerpo(arbol->hijos[3], variables);
+void EvaluarPrograma(Nodo* arbol) {
+    Variables variables;
+    EvaluarVariables(arbol->hijos[1], variables);
+    EvaluarCuerpo(arbol->hijos[3], variables);
 }
 
-void EvaluarVariables(Nodo* arbol, Variables& variables){
-	AgregarVariable(arbol->hijos[0]->lexema, variables, arbol->control);
-	EvaluarIdVar(arbol->hijos[1], variables);
+void EvaluarVariables(Nodo* arbol, Variables& variables) {
+    AgregarVariable(arbol->hijos[0], variables, arbol->control);
+    EvaluarIdVar(arbol->hijos[1], variables);
 }
 
-void EvaluarIdVar(Nodo* IdVar, Variables& variables){
-	Nodo* primerHijo = IdVar->hijos[0];
-	if(primerHijo->complex == Complex::Coma){
-		AgregarVariable(IdVar->hijos[1]->lexema, variables, IdVar->control);
-		EvaluarIdVar(IdVar->hijos[2], variables);
-	}
+void EvaluarIdVar(Nodo* IdVar, Variables& variables) {
+    Nodo* primerHijo = IdVar->hijos[0];
+
+    if (primerHijo->complex == Complex::Coma) {
+        AgregarVariable(IdVar->hijos[1], variables, IdVar->control);
+        EvaluarIdVar(IdVar->hijos[2], variables);
+    }
 }
 
 void EvaluarCuerpo(Nodo* Cuerpo, Variables& variables){
@@ -67,50 +74,65 @@ void EvaluarSent(Nodo* Sent, Variables& variables){
 	Nodo* primerHijo = Sent->hijos[0];
 	switch (primerHijo->complex) {
 		case Complex::Id:
-			EvaluarAsignacion(Sent->hijos[2], primerHijo->lexema, variables);
+			EvaluarAsignacion(Sent->hijos[2], primerHijo, variables);
 			break;
 		case Complex::Leer:
-			EvaluarLeer(Sent->hijos[2]->lexema, Sent->hijos[4]->lexema, variables, Sent->control);
+			EvaluarLeer(Sent->hijos[2], Sent->hijos[4], variables,
+						Sent->control);
 			break;
 		case Complex::Escribir:
-			EvaluarEscribir(Sent->hijos[2]->lexema, Sent->hijos[4], variables);
+			EvaluarEscribir(Sent->hijos[2]->lexema, Sent->hijos[4],
+							variables);
 			break;
 		case Complex::Mientras:
 			EvaluarMientras(Sent->hijos[2], Sent->hijos[5], variables);
 			break;
 		case Complex::Si:
-			EvaluarSi(Sent->hijos[2], Sent->hijos[5], Sent->hijos[7], variables);
+			EvaluarSi(Sent->hijos[2], Sent->hijos[5], Sent->hijos[7],
+						variables);
 			break;
 		default:
 			break;
-	}
+        }
 }
 
-void EvaluarAsignacion(Nodo* OperacionAritmetica, std::string lexema, Variables& variables){
-	if(VariableExiste(lexema, variables)){
-		double res = 0;
-		EvaluarOpAritmeticas(OperacionAritmetica, variables, res);
+void EvaluarAsignacion(Nodo* OperacionAritmetica, Nodo* id,
+                       Variables& variables) {
+    if (VariableExiste(id->lexema, variables)) {
+        double res = 0;
+        EvaluarOpAritmeticas(OperacionAritmetica, variables, res);
 
-		variables[lexema] = res;
-	}else{		
-		ManejarErrorYSalir("ERROR: Uso de la variable " + lexema + " no declarada", OperacionAritmetica->control);
-	}
-}
-
-void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, ulong* controlMasCercano){
-    if (VariableExiste(lexema, variables)) {
-        cadena.erase(std::remove(cadena.begin(), cadena.end(), '\"'),
-                     cadena.end());
-
-        ((writeFunc*)InstancePointers::getWriteBeforeReadFuncPtr())(
-            cadena.c_str());
-        // std::cout << cadena;
-        variables[lexema] = ((readFunc*)InstancePointers::getReadFuncPtr())();
-        // std::cin >> variables[lexema];
+        variables[id->lexema] = res;
     } else {
         ManejarErrorYSalir(
-            "ERROR: Uso de la variable " + lexema + " no declarada.",
-            controlMasCercano);
+            Error(-1, -1, id->lexema.length(),
+                  "Uso de la variable '" + id->lexema + "' no declarada"),
+            id->control);
+    }
+}
+
+void EvaluarLeer(Nodo* cadena, Nodo* id, Variables& variables,
+                 ulong* controlMasCercano) {
+    if (VariableExiste(id->lexema, variables)) {
+        cadena->lexema.erase(
+            std::remove(cadena->lexema.begin(), cadena->lexema.end(), '\"'),
+            cadena->lexema.end());
+
+#ifdef USE_EMSCRIPTEN
+        val interprete = val::global("interprete");
+        variables[lexema] =
+            interprete.call<val>("writeMessageReadValue", cadena)
+                .await()
+                .as<double>();
+#else
+        std::cout << cadena;
+        std::cin >> variables[id->lexema];
+#endif
+    } else {
+        ManejarErrorYSalir(
+            Error(-1, -1, id->lexema.length(),
+                  "Uso de la variable '" + id->lexema + "' no declarada"),
+            id->control);
     }
 }
 
@@ -121,8 +143,12 @@ void EvaluarEscribir(std::string cadena, Nodo* OperacionAritmetica, Variables& v
 
     cadena += std::to_string(res) + "\n";
 
-    ((writeFunc*)InstancePointers::getWriteFuncPtr())(cadena.c_str());
-    // std::cout << cadena << res << std::endl;
+#ifdef USE_EMSCRIPTEN
+    val interprete = val::global("interprete");
+    interprete.call<void>("writeMessage", cadena);
+#else
+    std::cout << cadena << res << std::endl;
+#endif
 }
 
 void EvaluarMientras(Nodo* Condiciones, Nodo* Cuerpo, Variables& variables){
@@ -317,18 +343,18 @@ void EvaluarR(Nodo* R, Variables& variables, double& res){
 	Nodo* primerHijo = R->hijos[0];
 	switch (primerHijo->complex)
 	{
-		case Complex::Id:
-			res = ObtenerValorVariable(primerHijo->lexema, variables, R->control);
-			break;
-		case Complex::Constante:
-			res = std::stod(primerHijo->lexema);
-			break;
-		case Complex::ParentesisA:
-			EvaluarOpAritmeticas(R->hijos[1], variables, res);
-			break;
-		case Complex::Menos:
-			EvaluarR(R->hijos[1], variables, res);
-			res *= -1;
-			break;
-	}
+            case Complex::Id:
+                res = ObtenerValorVariable(primerHijo, variables, R->control);
+                break;
+            case Complex::Constante:
+                res = std::stod(primerHijo->lexema);
+                break;
+            case Complex::ParentesisA:
+                EvaluarOpAritmeticas(R->hijos[1], variables, res);
+                break;
+            case Complex::Menos:
+                EvaluarR(R->hijos[1], variables, res);
+                res *= -1;
+                break;
+        }
 }

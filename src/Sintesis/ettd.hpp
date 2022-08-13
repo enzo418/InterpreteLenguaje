@@ -1,11 +1,14 @@
 #pragma once
 
-#include <emscripten/val.h>
-
 #include "../AnalizadorSintactico/tipos.hpp"
-#include "../InstancePointers.hpp"
+#include "../Definiciones.hpp"
 #include "ettd.hpp"
 #include "tipos.hpp"
+
+#ifdef USE_EMSCRIPTEN
+#include <emscripten/val.h>
+using namespace emscripten;
+#endif
 
 using Nodo=AnalizadorSintactico::Nodo;
 using Variables=Sintesis::Variables;
@@ -21,9 +24,11 @@ void EvaluarCuerpo(Nodo* Cuerpo, Variables& variables);
 
 void EvaluarSent(Nodo* Sent, Variables& variables);
 
-void EvaluarAsignacion(Nodo* OperacionAritmetica, std::string lexema, Variables& variables);
+void EvaluarAsignacion(Nodo* OperacionAritmetica, Nodo* id,
+                       Variables& variables);
 
-void EvaluarLeer(std::string cadena, std::string lexema, Variables& variables, ulong* controlMasCercano);
+void EvaluarLeer(Nodo* cadena, Nodo* id, Variables& variables,
+                 ulong* controlMasCercano);
 
 void EvaluarEscribir(std::string cadena, Nodo* OperacionAritmetica, Variables& variables);
 

@@ -11,7 +11,9 @@ file(GLOB FUENTES_Sintesis "${PROJECT_SOURCE_DIR}/src/Sintesis/*.cpp")
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/")
 
 #  -sLLD_REPORT_UNDEFINED  -> allows addfunction
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -sALLOW_TABLE_GROWTH -lembind --em-config /home/enzo/builds/emsdk/.emscripten")
+
+# -sALLOW_TABLE_GROWTH -sASYNCIFY -lembind --em-config /home/enzo/builds/emsdk/.emscripten
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 
 
@@ -19,6 +21,6 @@ set(CMAKE_BUILD_TYPE Debug)
 
 #set(CMAKE_C_COMPILER "gcc-4.2")
 
-set(CMAKE_CXX_COMPILER "emcc")
+#set(CMAKE_CXX_COMPILER "emcc")
 
 add_executable(Interprete ${FUENTES} ${FUENTES_Lexico} ${FUENTES_Sintactico} ${FUENTES_Sintesis})

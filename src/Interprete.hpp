@@ -1,7 +1,5 @@
 #pragma once
 
-#include <emscripten/bind.h>
-
 #include <cstdint>
 #include <fstream>
 #include <functional>  // std::ref
@@ -10,19 +8,22 @@
 
 #include "AnalizadorLexico/tipos.hpp"
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
-#include "InstancePointers.hpp"
+#include "Definiciones.hpp"
+#include "Error.hpp"
 #include "Sintesis/ettd.hpp"
 #include "utiles.hpp"
 
 using Complex = AnalizadorLexico::ComponenteLexico;
+
+#ifdef USE_EMSCRIPTEN
+#include <emscripten/bind.h>
 using namespace emscripten;
+#endif
 
 class Interprete {
    public:
     Interprete() {};
-    static void Interpretar(std::string input, intptr_t write_func_ptr,
-                            intptr_t read_func_ptr,
-                            intptr_t write_before_read_func_ptr);
+    static void Interpretar(std::string input);
 
    private:
     static AnalizadorSintactico::TAS tas;
@@ -31,16 +32,4 @@ class Interprete {
     static AnalizadorLexico::TablaSimbolos ts;
 
     static const char* SimboloInicial;
-
-    static intptr_t write_func_ptr;
-    static intptr_t read_func_ptr;
 };
-
-/*
-EMSCRIPTEN_BINDINGS(interprete) {
-  class_<Interprete>("Interprete")
-    //.constructor<std::string, intptr_t, intptr_t>()
-    .class_function("Interpretar", &Interprete::Interpretar)
-    ;
-}
-*/

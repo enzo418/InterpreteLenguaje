@@ -34,22 +34,24 @@ bool ObtenerSiguienteComplex(std::istream& fuente, ulong& control,
 	
 	if (EsIdentificador(fuente, control, lexema)) {
 		complex = ComponenteLexico::Id;
-		
-		if(!ExisteEnTS(ts, lexema, complex)){			
-			AgregarEnTablaSimbolos(lexema, complex, ts);
-		}
-	} else if (EsConstanteReal(fuente, control, lexema)) {
-		complex = ComponenteLexico::Constante;
-	} else if (EsConstanteEntera(fuente, control, lexema)) {
-		complex = ComponenteLexico::Constante;
-	} else if (EsOperadorRelacional(fuente, control, lexema)) {
-		complex = ComponenteLexico::OpRel;
-	} else if (EsCadena(fuente, control, lexema)){
-		complex = ComponenteLexico::Cadena;
-	} else if (!EsSimboloEspecial(fuente, control, lexema, complex)) {
-		complex = ComponenteLexico::ErrorLexico;
-		lexema = "";
-	}
 
-	return true;
+        if (!ExisteEnTS(ts, lexema, complex)) {
+            AgregarEnTablaSimbolos(lexema, complex, ts);
+        }
+    } else if (EsConstanteReal(fuente, control, lexema)) {
+        complex = ComponenteLexico::Constante;
+    } else if (EsConstanteEntera(fuente, control, lexema)) {
+        complex = ComponenteLexico::Constante;
+    } else if (EsOperadorRelacional(fuente, control, lexema)) {
+        complex = ComponenteLexico::OpRel;
+    } else if (EsSimboloEspecial(fuente, control, lexema, complex)) {
+        //
+    } else if (EsCadena(fuente, control, lexema)) {
+        complex = ComponenteLexico::Cadena;
+        // lexema = "";
+    } else {
+        complex = ComponenteLexico::ErrorLexico;
+    }
+
+    return true;
 }

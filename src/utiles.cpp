@@ -1,10 +1,12 @@
-#include <iostream>
-#include <fstream>
-#include <string.h>
-#include <sstream>
-#include <algorithm>
-
 #include "utiles.hpp"
+
+#include <string.h>
+
+#include <algorithm>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 #include "AnalizadorSintactico/tipos.hpp"
 
@@ -73,28 +75,24 @@ void ArbolAArchivo(AnalizadorSintactico::Nodo* arbol){
 	outfile.close();	    
 }
 
+void ManejarErrorYSalir(const Error& error, ulong* controlMasCercano) {
+    Error err = error;
 
-void ManejarErrorYSalir(std::string mensaje, ulong* controlMasCercano){
-	std::cout << mensaje << std::endl;
+    if (error.linea == -1 || error.columna == -1) {
+        std::istringstream fuente(_CodigoFuente.c_str());
 
-	if(controlMasCercano){
-		std::ifstream archivo;
-		AbrirArchivo(archivo, _ArchivoFuente);
+        auto [linea, columna] =
+            ObtenerLineaColumnaDeControl(fuente, *controlMasCercano);
 
-		archivo.seekg(*controlMasCercano - 1);
+        err = Error(linea, columna, error.longitud, error.mensaje);
+    }
 
-		VolverHastaNuevaLinea(archivo);
-		
-		std::string linea;
-		std::getline(archivo, linea);
+    std::cout << "Error!"
+              << "\nLinea: " << err.linea << "\nColumna: " << err.columna
+              << "\nLongitud: " << err.longitud << "\nMensaje: " << err.mensaje
+              << std::endl;
 
-		// Quitar los tabs
-		linea.erase(std::remove( linea.begin(), linea.end(), '\t' ),linea.end());
-
-		std::cout << "\n" << _ArchivoFuente << ":" << *controlMasCercano << " \"" << linea << "\"" << std::endl;
-	}
-	
-	std::exit(EXIT_FAILURE);
+    std::exit(EXIT_SUCCESS);
 }
 
 void VolverHastaNuevaLinea(std::ifstream& archivo){
@@ -111,4 +109,26 @@ void VolverHastaNuevaLinea(std::ifstream& archivo){
 			break;	
 		}else archivo.unget();
 	}
+}
+
+std::pair<ulong, ulong> ObtenerLineaColumnaDeControl(std::istream& fuente,
+                                                     ulong position) {
+    fuente.clear();
+    ulong current = fuente.tellg();
+    fuente.seekg(0);
+
+    ulong line = 1;
+    ulong column = 1;
+    while (fuente.tellg() < position && !fuente.eof()) {
+        if (fuente.get() == '\n') {
+            line++;
+            column = 0;
+        } else {
+            column++;
+        }
+    }
+
+    fuente.seekg(position);
+
+    return std::make_pair(line, column);
 }

@@ -1,7 +1,9 @@
 *
 
+!src/
 !src/**/*.cpp
 !*.cpp
+!*.hpp
 
 !build/
 !build/*.js

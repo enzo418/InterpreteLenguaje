@@ -1,22 +1,22 @@
 #include "Interprete.hpp"
 
-#include "InstancePointers.hpp"
+#include "utiles.hpp"
 
-void Interprete::Interpretar(std::string input, intptr_t write_func_ptr,
-                             intptr_t read_func_ptr,
-                             intptr_t write_before_read_func_ptr) {
-    InstancePointers::setReadFuncPtr(read_func_ptr);
-    InstancePointers::setWriteFuncPtr(write_func_ptr);
-    InstancePointers::setWriteBeforeReadFuncPtr(write_before_read_func_ptr);
-
+void Interprete::Interpretar(std::string input) {
     AnalizadorSintactico::Nodo* arbol =
         new AnalizadorSintactico::Nodo(SimboloInicial);
 
-    std::istringstream fuente(input.c_str());
-    int codigo =
-        ObtenerArbolDerivacion(fuente, arbol, tas, ts, SimboloInicial, false);
+    Error error;
 
-    EvaluarPrograma(arbol);
+    std::istringstream fuente(input.c_str());
+    bool arbolObtenidoConExito = ObtenerArbolDerivacion(
+        fuente, arbol, tas, ts, SimboloInicial, false, error);
+
+    if (arbolObtenidoConExito) {
+        EvaluarPrograma(arbol);
+    } else {
+        ManejarErrorYSalir(error);
+    }
 
     LimpiarArbol(arbol);
 }
@@ -172,8 +172,10 @@ AnalizadorLexico::TablaSimbolos Interprete::ts = {
     {Complex::Escribir, "escribir", true},
     {Complex::Mientras, "mientras", true}};
 
+#ifdef USE_EMSCRIPTEN
 EMSCRIPTEN_BINDINGS(interprete) {
     class_<Interprete>("Interprete")
         //.constructor<std::string, intptr_t, intptr_t>()
         .class_function("Interpretar", &Interprete::Interpretar);
 }
+#endif
