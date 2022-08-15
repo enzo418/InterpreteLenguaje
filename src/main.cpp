@@ -16,7 +16,13 @@ std::string _CodigoFuente;  // utilizada en utils
 
 #ifndef USE_EMSCRIPTEN
 int main(int cant_args, char* args[]) {
-    std::ifstream t("test.txt");
+    std::string inputFile("entrada.txt");
+
+    if (cant_args > 1) {
+        inputFile = args[1];
+    }
+
+    std::ifstream t(inputFile);
     std::stringstream buffer;
     buffer << t.rdbuf();
 

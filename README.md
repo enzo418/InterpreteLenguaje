@@ -5,7 +5,7 @@ Es in interprete de un lenguaje de programación que los integrantes llamamos "F
 1. Ir a [releases](https://github.com/enzo418/InterpreteLenguaje/releases) y descargarlo.
 2. Escribir el codigo que debe interpretar en un archivo, para indicarle cual es el archivo se puede hacer de 2 formas:
  	- El interprete por defecto trata de leer un archivo "entrada.txt" en el mismo directorio que esta el ejecutable,
- 	- o pasarle la flag -fuente seguido del nombre del arhivo 
+ 	- o pasarle como argumento el archivo, ejemplo "./Interprete archivo.txt"
 	
 Este programa también reconoce un argumento opcional que se utiliza para obtener más información por la consola sobre lo que va realizando en la Fase de Análisis, ese argumento es -volcar. Ejemplo, ./Interprete.exe -volcar
 
