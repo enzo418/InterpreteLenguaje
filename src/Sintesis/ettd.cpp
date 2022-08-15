@@ -28,7 +28,7 @@ double ObtenerValorVariable(Nodo* id, Variables& variables,
         ManejarErrorYSalir(
             Error(-1, -1, id->lexema.length(),
                   "Uso de la variable '" + id->lexema + "' no declarada."),
-            id->control);
+            *id->control);
     }
 }
 
@@ -38,7 +38,7 @@ void AgregarVariable(Nodo* id, Variables& variables, ulong* controlMasCercano) {
     } else {
         ManejarErrorYSalir(Error(-1, -1, id->lexema.length(),
                                  "Variable '" + id->lexema + "' ya declarada."),
-                           id->control);
+                           *id->control);
     }
 }
 
@@ -107,7 +107,7 @@ void EvaluarAsignacion(Nodo* OperacionAritmetica, Nodo* id,
         ManejarErrorYSalir(
             Error(-1, -1, id->lexema.length(),
                   "Uso de la variable '" + id->lexema + "' no declarada"),
-            id->control);
+            *id->control);
     }
 }
 
@@ -120,19 +120,19 @@ void EvaluarLeer(Nodo* cadena, Nodo* id, Variables& variables,
 
 #ifdef USE_EMSCRIPTEN
         val interprete = val::global("interprete");
-        variables[lexema] =
-            interprete.call<val>("writeMessageReadValue", cadena)
+        variables[id->lexema] =
+            interprete.call<val>("writeMessageReadValue", cadena->lexema)
                 .await()
                 .as<double>();
 #else
-        std::cout << cadena;
+        std::cout << cadena->lexema;
         std::cin >> variables[id->lexema];
 #endif
     } else {
         ManejarErrorYSalir(
             Error(-1, -1, id->lexema.length(),
                   "Uso de la variable '" + id->lexema + "' no declarada"),
-            id->control);
+            *id->control);
     }
 }
 

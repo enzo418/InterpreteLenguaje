@@ -34,25 +34,25 @@ void LeerArgumentos(int cant_args, char* args[], std::string& archivoFuente, boo
 
 }
 
+void RaizAString(AnalizadorSintactico::Nodo* raiz, std::string& texto) {
+    std::ostringstream dirraiz;
+    dirraiz << (void const*)raiz;
 
-void RaizAString(AnalizadorSintactico::Nodo* raiz, std::string& texto){
-	std::ostringstream dirraiz;
-	dirraiz << (void const *)raiz;
+    texto += dirraiz.str() + "_" + raiz->contenido + ":";
 
-	texto += dirraiz.str() + "_" + raiz->contenido + ":";
-
-	// agregar todos los hijos a la cadena separados por $
-	size_t sz = raiz->hijos.size(); 
+    // agregar todos los hijos a la cadena separados por $
+    size_t sz = raiz->hijos.size();
     // apilar todos los simbolos (de derecha a izquierda) y crear sus nodos
-    for(int i = 0; i < sz; i++) {
+    for (int i = 0; i < sz; i++) {
         std::ostringstream dirhijo;
-	    dirhijo << (void const *)raiz->hijos[i];
-		texto += "¿" + dirhijo.str() +"_"+ raiz->hijos[i]->contenido + "?$";
-	}
+        dirhijo << (void const*)raiz->hijos[i];
+        texto += "|" + dirhijo.str() + " " + raiz->hijos[i]->contenido + " " +
+                 raiz->hijos[i]->lexema + "|";
+    }
 
     if(sz > 0)
         // remplezar el ultimo $ con \n
-        texto[texto.length() - 1] = '\n';
+        texto += '\n';
     else
         texto += "\n";
 
@@ -75,24 +75,32 @@ void ArbolAArchivo(AnalizadorSintactico::Nodo* arbol){
 	outfile.close();	    
 }
 
-void ManejarErrorYSalir(const Error& error, ulong* controlMasCercano) {
+void ManejarErrorYSalir(const Error& error, ulong controlMasCercano,
+                        bool shouldThrow) {
     Error err = error;
 
     if (error.linea == -1 || error.columna == -1) {
         std::istringstream fuente(_CodigoFuente.c_str());
 
         auto [linea, columna] =
-            ObtenerLineaColumnaDeControl(fuente, *controlMasCercano);
+            ObtenerLineaColumnaDeControl(fuente, controlMasCercano);
 
-        err = Error(linea, columna, error.longitud, error.mensaje);
+        err = Error(linea, columna - error.longitud, error.longitud,
+                    error.mensaje);
     }
 
+#ifdef USE_EMSCRIPTEN
+    val interprete = val::global("interprete");
+    interprete.call<val>("addErrorMarker", err.linea, err.columna, err.longitud,
+                         err.mensaje);
+#else
     std::cout << "Error!"
               << "\nLinea: " << err.linea << "\nColumna: " << err.columna
               << "\nLongitud: " << err.longitud << "\nMensaje: " << err.mensaje
               << std::endl;
+#endif
 
-    std::exit(EXIT_SUCCESS);
+    if (shouldThrow) throw 1;
 }
 
 void VolverHastaNuevaLinea(std::ifstream& archivo){
@@ -122,7 +130,7 @@ std::pair<ulong, ulong> ObtenerLineaColumnaDeControl(std::istream& fuente,
     while (fuente.tellg() < position && !fuente.eof()) {
         if (fuente.get() == '\n') {
             line++;
-            column = 0;
+            column = 1;
         } else {
             column++;
         }

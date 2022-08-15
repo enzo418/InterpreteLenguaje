@@ -8,7 +8,6 @@
 
 #include "AnalizadorLexico/tipos.hpp"
 #include "AnalizadorSintactico/AnalizadorSintactico.hpp"
-#include "Definiciones.hpp"
 #include "Error.hpp"
 #include "Sintesis/ettd.hpp"
 #include "utiles.hpp"
@@ -23,7 +22,7 @@ using namespace emscripten;
 class Interprete {
    public:
     Interprete() {};
-    static void Interpretar(std::string input);
+    static int Interpretar(std::string input);
 
    private:
     static AnalizadorSintactico::TAS tas;

@@ -1,5 +1,6 @@
 #include "AnalizadorSintactico.hpp"
 
+#include <cstdlib>
 #include <iostream>
 
 #include "../AnalizadorLexico/AnalizadorLexico.hpp"
@@ -118,13 +119,13 @@ bool ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
                     if (_F == "opRel") _F = "operador relacional";
 
                     auto [linea, columna] =
-                        ObtenerLineaColumnaDeControl(fuente, *raiz->control);
+                        ObtenerLineaColumnaDeControl(fuente, control);
                     errorData = Error(linea, columna, raiz->contenido.length(),
                                       "Se esperaba \"" + _F +
                                           "\", se obtuvo \"" + lexema + "\"");
                 } else {
                     auto [linea, columna] =
-                        ObtenerLineaColumnaDeControl(fuente, *raiz->control);
+                        ObtenerLineaColumnaDeControl(fuente, control);
                     errorData =
                         Error(linea, columna, lexema.length(),
                               "Caracter no esperado \"" + lexema +

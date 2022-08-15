@@ -2,23 +2,51 @@
 
 #include "utiles.hpp"
 
-void Interprete::Interpretar(std::string input) {
+int Interprete::Interpretar(std::string input) {
+    bool sucess = true;
     AnalizadorSintactico::Nodo* arbol =
         new AnalizadorSintactico::Nodo(SimboloInicial);
 
     Error error;
 
-    std::istringstream fuente(input.c_str());
-    bool arbolObtenidoConExito = ObtenerArbolDerivacion(
-        fuente, arbol, tas, ts, SimboloInicial, false, error);
+    _CodigoFuente = input;
 
+    std::istringstream fuente(input.c_str());
+
+    bool arbolObtenidoConExito = false;
+
+    try {
+        arbolObtenidoConExito = ObtenerArbolDerivacion(
+            fuente, arbol, tas, ts, SimboloInicial, false, error);
+    } catch (...) {
+        sucess = false;
+    }
+
+    // guardar y enviar arbol al cliente
+#ifdef USE_EMSCRIPTEN
+    std::string cadenaArbol;  // reservar?
+    RaizAString(arbol, cadenaArbol);
+    val interprete = val::global("interprete");
+    interprete.call<void>("setSyntaxTree", cadenaArbol);
+#else
+    ArbolAArchivo(arbol);
+#endif
+
+    // Evaluar el codigo
     if (arbolObtenidoConExito) {
-        EvaluarPrograma(arbol);
+        try {
+            EvaluarPrograma(arbol);
+        } catch (...) {
+            sucess = false;
+        }
     } else {
-        ManejarErrorYSalir(error);
+        ManejarErrorYSalir(error, false);
+        sucess = false;
     }
 
     LimpiarArbol(arbol);
+
+    return (int)!sucess;
 }
 
 const char* Interprete::SimboloInicial = "<Programa>";

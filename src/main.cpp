@@ -14,16 +14,16 @@ using Complex=AnalizadorLexico::ComponenteLexico;
 
 std::string _CodigoFuente;  // utilizada en utils
 
+#ifndef USE_EMSCRIPTEN
 int main(int cant_args, char* args[]) {
     std::ifstream t("test.txt");
     std::stringstream buffer;
     buffer << t.rdbuf();
 
-    _CodigoFuente = buffer.str();
-
-    Interprete::Interpretar(_CodigoFuente);
+    Interprete::Interpretar(buffer.str());
 
     return 0;
 }
-
-int ___main____(int, char* arg[]) {}
+#else
+int main(int, char* arg[]) {}
+#endif

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../AnalizadorSintactico/tipos.hpp"
-#include "../Definiciones.hpp"
 #include "ettd.hpp"
 #include "tipos.hpp"
 
