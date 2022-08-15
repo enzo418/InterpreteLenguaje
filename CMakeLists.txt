@@ -18,13 +18,10 @@ if(USE_EMSCRIPTEN)
 
     # -sLLD_REPORT_UNDEFINED  -> allows addfunction
     # -sEXIT_RUNTIME=1
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -sEXCEPTION_CATCHING_ALLOWED=[ManejarErrorYSalir] -sEXIT_RUNTIME=1 -sALLOW_TABLE_GROWTH -sASYNCIFY -lembind --em-config /home/enzo/builds/emsdk/.emscripten")
+    # sALLOW_TABLE_GROWTH -> maybe is not even necessary since we just call with val
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -sEXCEPTION_CATCHING_ALLOWED=[ManejarErrorYSalir] -sEXIT_RUNTIME=1 -sALLOW_TABLE_GROWTH -sASYNCIFY -lembind")
 endif()
 
 set(CMAKE_BUILD_TYPE Debug)
-
-#set(CMAKE_C_COMPILER "gcc-4.2")
-
-#set(CMAKE_CXX_COMPILER "emcc")
 
 add_executable(Interprete ${FUENTES} ${FUENTES_Lexico} ${FUENTES_Sintactico} ${FUENTES_Sintesis})
