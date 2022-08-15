@@ -120,14 +120,15 @@ bool ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
 
                     auto [linea, columna] =
                         ObtenerLineaColumnaDeControl(fuente, control);
-                    errorData = Error(linea, columna, raiz->contenido.length(),
-                                      "Se esperaba \"" + _F +
-                                          "\", se obtuvo \"" + lexema + "\"");
+                    errorData =
+                        Error(linea, columna - lexema.length(), lexema.length(),
+                              "Se esperaba \"" + _F + "\", se obtuvo \"" +
+                                  lexema + "\"");
                 } else {
                     auto [linea, columna] =
                         ObtenerLineaColumnaDeControl(fuente, control);
                     errorData =
-                        Error(linea, columna, lexema.length(),
+                        Error(linea, columna - lexema.length(), lexema.length(),
                               "Caracter no esperado \"" + lexema +
                                   "\" Con la variable " + std::string(X));
                 }
@@ -173,7 +174,7 @@ bool ObtenerArbolDerivacion(std::istream& fuente, Nodo* arbol, TAS& tas,
                     ObtenerLineaColumnaDeControl(fuente, control);
 
                 errorData = Error(
-                    linea, columna, lexema.length(),
+                    linea, columna - lexema.length(), lexema.length(),
                     "Se esperaba \"" + _X + "\", se obtuvo \"" + lexema + "\"");
             }
         }

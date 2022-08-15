@@ -51,6 +51,14 @@ bool ObtenerSiguienteComplex(std::istream& fuente, ulong& control,
         // lexema = "";
     } else {
         complex = ComponenteLexico::ErrorLexico;
+
+        // leemos el siguiente caracter para mejorar el mensaje de error
+        if (lexema.length() == 0) {
+            char c = '\0';
+            fuente.get(c);
+            lexema = c;
+            control++;
+        }
     }
 
     return true;
