@@ -198,7 +198,8 @@ AnalizadorLexico::TablaSimbolos Interprete::ts = {
     {Complex::Leer, "leer", true},
     {Complex::RaizCuadrada, "rcd", true},
     {Complex::Escribir, "escribir", true},
-    {Complex::Mientras, "mientras", true}};
+    {Complex::Mientras, "mientras", true},
+    {Complex::Not, "not", true}};
 
 #ifdef USE_EMSCRIPTEN
 EMSCRIPTEN_BINDINGS(interprete) {
