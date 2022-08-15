@@ -13,6 +13,14 @@ Se puede mejorar el perfomance moviendo las llamadas a `val` de emscripten en ci
 	- `mkdir build-em && cd build-em`
 	- `emcmake cmake .. -D USE_EMSCRIPTEN=ON && emmake make -j4`
 3. En ese directorio `build-em` se generaron dos archivos, `Interprete.js` y `Interprete.wasm`, el .js se encarga de cargar el .wasm y proporciona utilidades para efectuar la comunicacion con el assembly. Ya que estamos utilizando el interprete como una libreria, es importante evitar que se llame a main. Esto es porque emscripten detiene el runtime si se tira una excepcion o se llama a `exit`.
+4. Es importante que el global de donde se este ejectutando el interprete tenga una propieda `interprete` que implemente los siguientes metodos y funciones que se llaman desde c++ compilado:
+	- `writeMessageReadValue(cadena) -> Promise<double>`: Funcion que toma una cadena y devuelve un promise de doble. Deberia escribir una cadena en la terminal, lee un valor del usuario en respuesta a esa cadena y resuelve la promesa.
+	- `writeMessage(cadena) -> void`: Metodo que toma una cadena. Deberia escribir un mensaje en la terminal.
+	- `setSyntaxTree(cadena) -> void`: Metodo que toma una cadena. Desde c++ se llama a esta funcion que puede procesarla para obtener los nodos y aristas del arbol para luego representarlo de forma gráfica, mostrar errores o demas.
+	- `addErrorMarker(linea, columna, longitud, mensaje) -> void`: Metodo que toma 3 enteros y una cadena. Cuando ocurre un error, ya sea en la etapa del analizador sintactico o runtime, se llama a esta funcion donde se detalla en que parte del input se produjo.
+5. Ejecutando el interprete
+	- Una vez que se cargo el assembly se puede llamar al interprete con, por ejemplo `globalThis.Module.Interprete.Interpretar(cadena)`. Esta llamada puede devolver un Promise si se ejecuta codigo de forma asincronica, como por ejemplo cuando se llama a `writeMessageReadValue` desde c++. Si esto no sucede la llamada devuelve un codigo o nada.
+	- Dado que desde el inteprete si ocurre un error hacemos lanzamos un error, es necesario envolver la llamada anterior en un try-catch y al promise agregarle un catch. Se lanza una excepcion ya que si ocurre un error en runtime, al ser llamadas recursivas, no tenemos otra condicion de salida mas que se acabe de recorrer el arbol.
 
 # Como usarlo?
 1. Ir a [releases](https://github.com/enzo418/InterpreteLenguaje/releases) y descargarlo.
