@@ -97,6 +97,7 @@ AnalizadorSintactico::TAS Interprete::tas = {
     {{"<B>", Complex::ParentesisC}, {"epsilon"}},
     {{"<B>", Complex::CorcheteC}, {"epsilon"}},
 
+    {{"<Cond3>", Complex::Not}, {"not", "<Cond3>"}},
     {{"<Cond3>", Complex::Menos},
      {"<OpAritmeticas>", "opRel", "<OpAritmeticas>"}},
     {{"<Cond3>", Complex::RaizCuadrada},

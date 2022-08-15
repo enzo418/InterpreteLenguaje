@@ -37,6 +37,8 @@ Complex StringAComplex(std::string X){
 		c=Complex::DobleIgual;
 	else if(X == "and")
 		c=Complex::And;
+	else if(X == "not")
+		c=Complex::Not;
 	else if(X == "or")
 		c=Complex::Or;
 	else if(X == "{")
